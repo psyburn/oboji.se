@@ -430,7 +430,7 @@ _.extend(resultsScreen, {
     if (playerWon) {
       this.$el.find('.winning-message').text('Awesome, ' + username + '! You have won this round.');
     } else {
-      this.$el.find('.winning-message').text('Awwww, ' + username + ', you have lost :( :(');
+      this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
     }
   },
   onScreenShown: function() {},
