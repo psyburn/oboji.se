@@ -13,6 +13,9 @@ $default-screen-background: white;
   white-space: nowrap;
   text-transform: uppercase;
   text-align: center;
-  border-bottom: 1px solid darkred;
+  border-bottom: 1px solid #555;
 }
 
+.switch-candy {
+  border-radius: 0;
+}
