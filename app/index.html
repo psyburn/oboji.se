@@ -1,23 +1,23 @@
 <!doctype html>
 <html class="no-js">
-  <head>
-    <meta charset="utf-8">
-    <title>Oboji.se!</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css" />
-    <link rel="stylesheet" href="../bower_components/css-toggle-switch/dist/toggle-switch.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <title>Oboji.se!</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css" />
+  <link rel="stylesheet" href="../bower_components/css-toggle-switch/dist/toggle-switch.css" />
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css(.tmp) styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+<body>
 
   <div id="pt-main" class="pt-perspective">
 
@@ -31,15 +31,12 @@
     <div class="pt-page" id="network-game-menu">
       <div class="public-private-chooser">
         <div class="switch-toggle switch-candy">
-        <input id="week" name="game-type" type="radio" checked value="public">
-        <label for="week" onclick="">PUBLIC</label>
-        <input id="month" name="game-type" type="radio" value="private">
-        <label for="month" onclick="">PRIVATE</label>
-        <a></a>
+          <input id="network-game-public-radio" name="game-type" type="radio" checked value="public">
+          <label for="network-game-public-radio" onclick="">PUBLIC</label>
+          <input id="network-game-private-radio" name="game-type" type="radio" value="private">
+          <label for="network-game-private-radio" onclick="">PRIVATE</label>
+          <a></a>
         </div>
-        </div>
-      <div class="game-code-container">
-        <div class="game-code-input">Code: </div>
       </div>
       <div class="button network-game-start-button">Create Game</div>
     </div>
@@ -59,6 +56,7 @@
     <div class="pt-page" id="network-game-lobby">
       <div class="player-count"></div>
       <div class="network-game-description"></div>
+      <div class="room-code"> </div>
       <div class="button game-start-button">Start game</div>
     </div>
 
@@ -97,20 +95,20 @@
       e.src='//www.google-analytics.com/analytics.js';
       r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
       ga('create','UA-XXXXX-X');ga('send','pageview');
-  </script> -->
+    </script> -->
 
-  <!-- build:js({app,.tmp}) scripts/main.js -->
-  <script src="scripts/core/color.js"></script>
-  <script src="scripts/core/motion.js"></script>
-  <script src="scripts/core/color-changer.js"></script>
-  <script src="scripts/core/motion.js"></script>
-  <script src="scripts/network/GameRoom.js"></script>
-  <script src="scripts/network/NetworkGame.js"></script>
-  <script src="scripts/page-transitions.js"></script>
-  <script src="scripts/main.js"></script>
-  <script src="scripts/utils.js"></script>
-  <script src="scripts/screen.js"></script>
-  <script src="scripts/game-screens.js"></script>
-  <!-- endbuild -->
-</body>
-</html>
+    <!-- build:js({app,.tmp}) scripts/main.js -->
+    <script src="scripts/core/color.js"></script>
+    <script src="scripts/core/motion.js"></script>
+    <script src="scripts/core/color-changer.js"></script>
+    <script src="scripts/core/motion.js"></script>
+    <script src="scripts/network/GameRoom.js"></script>
+    <script src="scripts/network/NetworkGame.js"></script>
+    <script src="scripts/page-transitions.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/screen.js"></script>
+    <script src="scripts/game-screens.js"></script>
+    <!-- endbuild -->
+  </body>
+  </html>

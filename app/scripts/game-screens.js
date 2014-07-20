@@ -1,13 +1,19 @@
 /*global Screen, Core, Utils, _*/
 'use strict';
 
-var networkGame;
+var networkGame = new NetworkGame({
+  name: localStorage.getItem('username')
+});
+
+var room;
+
+var startColor, targetColor;
+
 
 /* Game menu screen */
 var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
-
 
 _.extend(gameMenuScreen, {
   setListeners: function() {
@@ -26,10 +32,6 @@ _.extend(gameMenuScreen, {
   },
 
   onRandomNetworkGameClick: function() {
-    networkGame = new NetworkGame({
-      name: localStorage.getItem('username')
-    });
-
     networkGame.getPublicRooms(function(publicRooms) {
       if (publicRooms.length === 0) {
         Utils.switchScreen(gameMenuScreen);
@@ -40,7 +42,7 @@ _.extend(gameMenuScreen, {
 
       roomInfo.joinRoom(roomInfo.roomCode, function(room) {
         Utils.switchScreen(gameScreen);
-        gameScreen.setRoom(room);
+        gameScreen.startGame();
       });
     });
   },
@@ -94,12 +96,40 @@ var networkGameLobbyScreen = new Screen({
 });
 
 _.extend(networkGameLobbyScreen, {
+
   setListeners: function() {
-    this.$el.find('.game-start-button').on('click', this.onStartGameClick);
+    var me = this;
+    this.$el.find('.game-start-button').on('click', function() {
+      me.onStartGameClick.call(me);
+    });
+  },
+
+  onScreenShown: function() {
+    room.on('game:change', this.updateTexts, this);
+    room.on('game:next', this.onRoomGameNext, this);
+    this.updateTexts();
+  },
+
+  onRoomGameNext: function(inStartColor, inTargetColor) {
+    startColor = inStartColor;
+    targetColor = inTargetColor;
+    if (!room.isManager()) {
+      this.joinGame();
+    }
   },
 
   onStartGameClick: function() {
+    this.joinGame();
+  },
 
+  joinGame: function() {
+    Utils.switchScreen(gameScreen);
+    gameScreen.setRoom(room);
+  },
+
+  updateTexts: function() {
+    this.$('.room-code').text(room.getRoomCode());
+    this.$('.player-count').text(_.values(room.get('players')).length);
   },
 
   setPlayerCount: function(playerCount) {
@@ -122,16 +152,22 @@ var networkGameMenu = new Screen({
 
 _.extend(networkGameMenu, {
   setListeners: function() {
-    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onCreateGameClick, this));
     this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
   },
 
   getGameCodeValue: function() {
     return this.$el.find('.game-code-input').val();
   },
-  onGameStarClick: function() {
-    console.log('clicked game start');
+
+  onCreateGameClick: function() {
+    room = networkGame.createRoom({
+      'public': this.gameType === 'public',
+      maxPlayers: 100
+    });
+    Utils.switchScreen(networkGameLobbyScreen);
   },
+
   onGameTypeChage: function() {
     this.gameType = 'public';
     if (this.$el.find('input:checked').val() === 'private') {
@@ -155,16 +191,21 @@ var joinNetworkGameMenu = new Screen({
 
 _.extend(joinNetworkGameMenu, {
   setListeners: function() {
-    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStartClick, this));
     this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
   },
 
   getGameCodeValue: function() {
     return this.$el.find('.game-code-input').val();
   },
-  onGameStarClick: function() {
-    console.log('clicked game start');
+
+  onGameStartClick: function() {
+    networkGame.joinRoom(this.getGameCodeValue(), function(inRoom) {
+      room = inRoom;
+      Utils.switchScreen(networkGameLobbyScreen);
+    });
   },
+
   onGameTypeChage: function() {
     this.gameType = 'public';
     if (this.$el.find('input:checked').val() === 'private') {
@@ -203,11 +244,6 @@ $.extend(gameScreen, {
     Utils.switchScreen(optionsScreen);
   },
 
-  onGameStart: function() {
-    Core.colorChanger.setElement(this.$('.color2'));
-    this.startGameTimer();
-  },
-
   startGameTimer: function() {
     var me = this;
     this.clearGameTimer();
@@ -232,41 +268,39 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
-    this.onGameEnd();
-    // this.$currentColorOverlay
+    room.addScore(100);
   },
 
-  startGame: function(room, startColor, targetColor, time) {
-    var me = this;
-    me.setStartColor(startColor);
-    me.setTargetColor(targetColor);
-    me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
-      setTimeout(function() {
-        me.hideTopbar();
-        me.shrinkTargetColor();
-        me.$el.trigger('game-start-animation-finished');
-
-        me.onGameStart();
-      }, 2500);
-    });
-  },
-
-  setRoom: function(room) {
+  startGame: function() {
     if (room) {
       room.off('game:next', this.onGameNext, this);
       room.off('game:done', this.onGameDone, this);
       room.off('game:finish', this.onGameFinish, this);
       room.off('game:changed', this.onGameChange, this);
     }
-    this.room = room;
+
     room.on('game:next', this.onGameNext, this);
     room.on('game:done', this.onGameDone, this);
     room.on('game:finish', this.onGameFinish, this);
     room.on('game:changed', this.onGameChange, this);
 
     if (room.isManager()) {
-      this.startGame();
+      room.startNextGame();
     }
+
+    var me = this;
+    me.setStartColor(startColor);
+    me.setTargetColor(targetColor);
+
+    me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
+      setTimeout(function() {
+        me.hideTopbar();
+        me.shrinkTargetColor();
+
+        Core.colorChanger.setElement(me.$('.color2'));
+        me.startGameTimer();
+      }, 2500);
+    });
   },
 
   onGameEnd: function() {
@@ -278,20 +312,23 @@ $.extend(gameScreen, {
   },
 
   onGameDone: function() {
-
+    if (room.isManager()) {
+      room.finishGame();
+    }
   },
 
   onGameFinish: function() {
-
+    alert('fiinhs');
+    // room.getLeaderboard();
   },
 
-  onGameChange: function() {
-    if (this.room.isManager()) {
+  // onGameChange: function() {
+  //   if (this.room.isManager()) {
 
-    } else {
+  //   } else {
 
-    }
-  },
+  //   }
+  // },
 
 
   shrinkTargetColor: function() {
