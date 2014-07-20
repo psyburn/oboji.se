@@ -2,7 +2,6 @@
 
 var Screen = function(options) {
   this._init(options);
-  this.setListeners();
 };
 
 $.extend(Screen.prototype, {
@@ -10,7 +9,7 @@ $.extend(Screen.prototype, {
     this.$el = $('#' + options.id);
   },
   init: function(options) {
-    // game logic
+    this.setListeners();
   },
   setListeners: function(options) {
     // listeners
@@ -18,11 +17,29 @@ $.extend(Screen.prototype, {
 });
 
 
-var gameMenu = new Screen({
-  id: 'game-menu',
+var gameMenuScreen = new Screen({
+  id: 'game-menu'
+});
+
+var optionsScreen = new Screen({
+  id: 'options-screen'
+});
+
+$.extend(gameMenuScreen, {
   setListeners: function() {
-    this.$el.on('click', function(){
-      // smth
-    })
+    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+  },
+
+  onNetworkGameClick: function() {
+    Utils.switchScreen(optionsScreen);
   }
 });
+
+gameMenuScreen.init();
+
+var networkGameMenuScreen;
+
+var networkGameLobbyScreen;
+
+var gameScreen;
+
