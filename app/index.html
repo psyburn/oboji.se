@@ -24,11 +24,13 @@
       <div class="button network-game-random-start-button">Start Radnom Network Game</div>
       <div class="button network-game-button">Network Game</div>
       <div class="button options-button">Options</div>
+    </div> -->
+    <div class="pt-page" id="options-screen" data-first-page>
+      <input type="text" placeholder="username" value=""/>
+      <div class="button save-options-button">Save</div>
     </div>
-
-    <div class="pt-page" id="options-screen">
-    kreso je lijep ko slika
-    </div>
+<!--
+>>>>>>> started working on screen logic
 
     <div class="pt-page" id="network-game-menu">
       <div class="public-private-chooser"></div>
@@ -52,7 +54,7 @@
   <!-- bower:js -->
   <script src="../bower_components/modernizr/modernizr.js"></script>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
-  <script src="../bower_components/firebase/firebase-debug.js"></script>
+  <script src="../bower_components/firebase/firebase.js"></script>
   <script src="../bower_components/lodash/dist/lodash.compat.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
@@ -68,14 +70,15 @@
   </script> -->
 
   <!-- build:js({app,.tmp}) scripts/main.js -->
-  <<script src="scripts/core/motion.js"></script>
-  <<script src="scripts/core/game.js"></script>
+  <script src="scripts/core/motion.js"></script>
+  <script src="scripts/core/game.js"></script>
   <script src="scripts/network/GameRoom.js"></script>
   <script src="scripts/network/NetworkGame.js"></script>
   <script src="scripts/page-transitions.js"></script>
   <script src="scripts/main.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/screen.js"></script>
+  <script src="scripts/game-screens.js"></script>
   <!-- endbuild -->
 </body>
 </html>
