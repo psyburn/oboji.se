@@ -30,3 +30,8 @@ window.setInterval(setRandomColor,
 );
 
 setRandomColor();
+
+
+  $(window).on('beforeunload', function() {
+    return 'You have attempted to leave this game. You still need workout. Please stay.';
+  });
