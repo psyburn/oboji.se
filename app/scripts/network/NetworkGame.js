@@ -14,7 +14,7 @@ NetworkGame = function(player) {
     timeOffset = snap.val();
   });
 
-  var keyChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   var activeRoom = null;
   var publicRooms = [];
@@ -32,15 +32,15 @@ NetworkGame = function(player) {
     options.created = options.lastActive = getServerTime();
     options.manager = player;
     options.players = [player];
-    options.scores = [];
-    options.games = [];
+    options.scores = {};
+    options.games = {};
     if (options.public) {
       publicRoomList.push({
         roomCode: options.roomCode,
         lastActive: options.lastActive
       });
     }
-    remoteRooms.set(options);
+    remoteRooms.child(options.roomCode).set(options);
 
     if (activeRoom) {
       activeRoom.leaveRoom();
@@ -85,7 +85,7 @@ NetworkGame = function(player) {
 
   function getRoomInfo(roomCode, cb) {
     var room = new Firebase(rootPath + 'rooms/' + roomCode);
-    room.on('value', function(snapshot) {
+    room.once('value', function(snapshot) {
       cb(snapshot.val());
     });
   }
