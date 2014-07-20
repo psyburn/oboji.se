@@ -349,6 +349,10 @@ var resultsScreen = new Screen({
 
 _.extend(resultsScreen, {
   setListeners: function() {},
+  init: function() {
+    this.setListeners();
+    console.log('init');
+  },
   setWinningMessage: function(playerWon) {
     var username = localStorage.getItem('username');
     if (playerWon) {
@@ -356,8 +360,32 @@ _.extend(resultsScreen, {
     } else {
       this.$el.find('.winning-message').text('Awwww, ' + username + ', you have lost :( :(');
     }
+  },
+  onScreenShown: function() {},
+  setData: function(data) {
+    var playersList = $('<ul>').addClass('scores');
+    var playerItem;
+    var playerName;
+    var playerScore;
 
-    this.$el.find('.next-game-message').text('Next game is starting in couple of seconds. Please rest your arm until then. ');
+    data = _.sortBy(data, function(player) {
+      return -parseInt(player.score, 10);
+    });
+
+    playerName = $('<span>').addClass('player-name');
+    playerScore = $('<span>').addClass('player-score');
+    playerItem = $('<li>').addClass('player');
+
+    _.each(data, function(player) {
+      var newName = playerName.clone().text(player.name);
+      var newScore = playerScore.clone().text(player.score);
+      var newPlayer = playerItem.clone();
+      newPlayer.append(newName);
+      newPlayer.append(newScore);
+      playersList.append(newPlayer);
+    });
+
+    $('.players-container').append(playersList);
   }
 });
 
