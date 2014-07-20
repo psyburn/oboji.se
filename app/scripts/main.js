@@ -1,3 +1,4 @@
+'use strict';
 window.ObojiSe = {
   currentScreen: null
 };
@@ -13,3 +14,19 @@ var GameScreens = {
   networkGameLobby: 'network-game-lobby',
   gameScreen: 'game-screen'
 };
+
+
+function setRandomColor() {
+  $('.pt-page').each(function() {
+    var $this = $(this);
+    $this.css({
+      backgroundColor: randomColor()
+    });
+  });
+};
+
+window.setInterval(setRandomColor,
+  20*1000
+);
+
+setRandomColor();
