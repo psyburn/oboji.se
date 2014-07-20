@@ -1,4 +1,4 @@
-/*global Screen, Core, Utils*/
+/*global Screen, Core, Utils, _*/
 'use strict';
 
 var gameMenuScreen = new Screen({
@@ -21,7 +21,7 @@ _.extend(optionsScreen, {
   fillUsername: function() {
     var previousUsername = localStorage.getItem('username');
     if (previousUsername) {
-      if(this.$el.find('input').get(0)) {
+      if (this.$el.find('input').get(0)) {
         this.$el.find('input').get(0).value = previousUsername;
       }
     }
@@ -194,7 +194,6 @@ $.extend(gameScreen, {
     $('.color2').css({
       backgroundColor: targetColor
     });
-    this.$currentColorOverlay
   },
 
   setDescription: function(description) {
