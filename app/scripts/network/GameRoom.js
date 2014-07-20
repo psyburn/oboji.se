@@ -136,7 +136,9 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
 
   function set(propertyName, propertyValue) {
     gameInfo[propertyName] = propertyValue;
-    saveRoom();
+    saveRoom(_.bind(function() {
+      trigger('game:change');
+    }, this));
   }
 
   function saveRoom(cb) {

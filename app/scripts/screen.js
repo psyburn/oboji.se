@@ -4,7 +4,7 @@ var Screen = function(options) {
   this._init(options);
 };
 
-$.extend(Screen.prototype, {
+_.extend(Screen.prototype, {
   _init: function(options) {
     this.$el = $('#' + options.id);
     this.name = options.id;

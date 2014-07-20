@@ -70,13 +70,14 @@ NetworkGame = function(player) {
   function getPublicRooms(cb) {
     var publicRoomsInfo = [];
     var publicRoomArray = _.clone(publicRooms);
-    var lastActiveLimit = getServerTime() - 50 * 60 * 1000;
+    var lastActiveLimit = getServerTime() - 5 * 60 * 1000;
     
     function loadRoom() {
       var publicRoom = publicRoomArray.shift();
       if (publicRoom) {
         getRoomInfo(publicRoom.roomCode, _.bind(function(room) {
-          if (_.values(room.players || []).length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
+          var playerCount = _.values(room.players || []).length;
+          if (playerCount < room.maxPlayers && playerCount > 0 && !room.started && room.lastActive > lastActiveLimit) {
             publicRoomsInfo.push(room);
           }
           loadRoom();

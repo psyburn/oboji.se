@@ -10,6 +10,7 @@
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css" />
+    <link rel="stylesheet" href="../bower_components/css-toggle-switch/dist/toggle-switch.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -19,6 +20,7 @@
   <body>
 
   <div id="pt-main" class="pt-perspective">
+
     <div class="pt-page" id="game-menu" data-first-page>
       <div class="button network-game-random-start-button">Start Radnom Network Game</div>
       <div class="button network-game-button">Network Game</div>
@@ -26,21 +28,32 @@
     </div>
 
 
-    <div class="pt-page" id="options-screen">
-    kreso je lijep ko slika
-    </div>
-<!--
     <div class="pt-page" id="network-game-menu">
-      <div class="public-private-chooser"></div>
-      <div class="game-code-container"></div>
-      <div class="button network-game-start-button"></div>
+      <div class="public-private-chooser">
+        <div class="switch-toggle switch-candy">
+        <input id="week" name="game-type" type="radio" checked value="public">
+        <label for="week" onclick="">PUBLIC</label>
+        <input id="month" name="game-type" type="radio" value="private">
+        <label for="month" onclick="">PRIVATE</label>
+        <a></a>
+      </div>
+      <div class="game-code-container">
+        <input type="text" value="" class="game-code-input" placeholder="Game Code">
+      </div>
+      <div class="button network-game-start-button">Start Game</div>
+    </div>
+
+    <div class="pt-page" id="options-screen">
+      <input type="text" placeholder="username" value=""/>
+      <div class="button save-options-button">Save</div>
     </div>
 
     <div class="pt-page" id="network-game-lobby">
       <div class="player-count"></div>
-      <div class="button game-start-button"></div>
+      <div class="network-game-description"></div>
+      <div class="button game-start-button">Start game</div>
     </div>
--->
+
     <div class="pt-page game-screen " id="game-screen" >
       <div class="game-topbar"></div>
       <div class="color1"></div>
@@ -54,7 +67,7 @@
   <!-- bower:js -->
   <script src="../bower_components/modernizr/modernizr.js"></script>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
-  <script src="../bower_components/firebase/firebase-debug.js"></script>
+  <script src="../bower_components/firebase/firebase.js"></script>
   <script src="../bower_components/lodash/dist/lodash.compat.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
@@ -73,6 +86,8 @@
   <script src="scripts/core/color.js"></script>
   <script src="scripts/core/motion.js"></script>
   <script src="scripts/core/color-changer.js"></script>
+  <script src="scripts/core/motion.js"></script>
+  <script src="scripts/core/game.js"></script>
   <script src="scripts/network/GameRoom.js"></script>
   <script src="scripts/network/NetworkGame.js"></script>
   <script src="scripts/page-transitions.js"></script>
