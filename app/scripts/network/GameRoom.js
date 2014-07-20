@@ -11,13 +11,28 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     if (newInfo.started && !gameInfo.started) {
       trigger('game:start');
     }
+    if (!newInfo.started && gameInfo.started) {
+      trigger('game:finish');
+    }
+
+    if (newInfo.games.length > gameInfo.games.length) {
+      trigger('game:next');
+    }
+
+    if (newInfo.scores.length > gameInfo.scores.length && newInfo.scores.length === newInfo.games.length * newInfo.players.length) {
+      trigger('game:done');
+    }
 
     gameInfo = newInfo;
     trigger('game:change');
   });
 
-  function startGame() {
+  function startNextGame(startColor, goalColor) {
     gameInfo.started = true;
+    gameInfo.games.push({
+      startColor: startColor,
+      goalColor: goalColor
+    });
     saveRoom();
   }
 
@@ -48,11 +63,10 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   }
 
   function addScore(score) {
-    gameInfo.scores.push({
+    remoteRoom.child('scores').push({
       player: player,
       score: score
-    });
-    saveRoom();
+    }); // Will this work?
   }
 
   function on(eventName, cb, scope) {
@@ -104,6 +118,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     off: off,
     get: get,
     set: set,
-    addScore: addScore
+    addScore: addScore,
+    startNextGame: startNextGame
   };
 };

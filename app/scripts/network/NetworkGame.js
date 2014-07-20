@@ -50,20 +50,14 @@ NetworkGame = function(player) {
   }
 
   function getPublicRooms(cb) {
-    var availablePublicRooms = [];
     var publicRoomsInfo = [];
     var lastActiveLimit = getServerTime() - 5 * 60 * 1000;
-    for (var i = 0; i < publicRooms.length; i++) {
-      if (publicRooms.lastActive > lastActiveLimit) {
-        availablePublicRooms.push(publicRooms.roomCode);
-      }
-    }
-
+    
     function loadRoom() {
-      var roomCode = availablePublicRooms.shift();
+      var roomCode = publicRooms.shift();
       if (roomCode) {
         getRoomInfo(roomCode, function(room) {
-          if (room.players.length < room.maxPlayers) {
+          if (room.players.length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
             publicRoomsInfo.push(room);
           }
         });
