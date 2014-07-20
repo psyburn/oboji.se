@@ -4,14 +4,23 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   'use strict';
 
   var listeners = {};
+
+  function trigger(eventName) {
+    listeners[eventName] = listeners[eventName] || [];
+    var args = _.toArray(arguments).slice(1);
+    for (var i = 0; i < listeners[eventName]; i++) {
+      listeners[eventName][i].cb.apply(listeners[eventName][i].scope, args);
+    }
+  }
+
   remoteRoom.on('value', _.bind(function(snapshot) {
     var newInfo = snapshot.val() || {};
 
     if (newInfo.started && !gameInfo.started) {
-      this.trigger('game:start');
+      trigger('game:start');
     }
     if (!newInfo.started && gameInfo.started) {
-      this.trigger('game:finish');
+      trigger('game:finish');
     }
 
     var newGames = _.values(newInfo.games || {});
@@ -19,7 +28,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
 
     if (newGames.length > oldGames.length) {
       var game = newInfo.games.slice(-1);
-      this.trigger('game:next', game.startColor, game.goalColor);
+      trigger('game:next', game.startColor, game.goalColor);
     }
 
     var newScores = _.values(newInfo.scores || {});
@@ -28,29 +37,29 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
 
     if (newScores.length > oldScores.length &&
         newScores.length === newGames.length * newPlayers.length) {
-      this.trigger('game:done');
+      trigger('game:done');
     }
 
     gameInfo = newInfo;
-    this.trigger('game:change');
+    trigger('game:change');
   }, this));
 
   function startNextGame(startColor, goalColor) {
-    var me = this;
-    var gameCount = _.values(gameInfo.games || {}).length;
+    gameInfo.games = gameInfo.games || {};
+    var gameCount = _.values(gameInfo.games).length;
     gameInfo.started = true;
     var game = {
       startColor: startColor,
       goalColor: goalColor
     };
-    gameInfo.games = gameInfo.games || {};
     gameInfo.games[gameCount] = game;
-    saveRoom(function() {
+    saveRoom(_.bind(function() {
+      debugger
       if (!gameCount) {
-        me.trigger('game:start');
+        trigger('game:start');
       }
-      me.trigger('game:next', game.startColor, game.goalColor);
-    });
+      trigger('game:next', game.startColor, game.goalColor);
+    }, this));
   }
 
   function leaveRoom() {
@@ -105,14 +114,6 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     }
   }
 
-  this.trigger = function(eventName) {
-    listeners[eventName] = listeners[eventName] || [];
-    var args = _.toArray(arguments).slice(1);
-    for (var i = 0; i < listeners[eventName]; i++) {
-      listeners[eventName][i].cb.apply(listeners[eventName][i].scope, args);
-    }
-  };
-
   function get(propertyName) {
     return gameInfo[propertyName] || null;
   }
@@ -123,6 +124,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   }
 
   function saveRoom(cb) {
+    cb = cb || function() {};
     gameInfo.lastActive = netGame.getServerTime();
     remoteRoom.set(gameInfo, cb);
   }
