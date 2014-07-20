@@ -24,7 +24,11 @@ _.extend(gameMenuScreen, {
   },
 
   onNetworkGameClick: function() {
-    Utils.switchScreen(networkGameMenu);
+    room = networkGame.createRoom({
+      'public': false,
+      maxPlayers: 100
+    });
+    Utils.switchScreen(networkGameLobbyScreen);
   },
 
   onJoinNetworkGameClick: function() {
@@ -362,7 +366,8 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
-    alert('Finish');
+    Utils.switchScreen(resultsScreen);
+    // alert('Finish');
     // room.getLeaderboard();
   },
 
@@ -433,7 +438,11 @@ _.extend(resultsScreen, {
       this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
     }
   },
-  onScreenShown: function() {},
+  onScreenShown: function() {
+    var board = room.getLeaderboard();
+    this.setWinningMessage(true);
+    this.setData(board);
+  },
   setData: function(data) {
     var playersList = $('<ul>').addClass('scores');
     var playerItem;

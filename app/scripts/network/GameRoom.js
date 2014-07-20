@@ -151,6 +151,13 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     return manager;
   }
 
+  function finishGame() {
+    gameInfo.started = false;
+    saveRoom(_.bind(function() {
+      trigger('game:finish');
+    }, this));
+  }
+
   return {
     leaveRoom: leaveRoom,
     getLeaderboard: getLeaderboard,
@@ -162,6 +169,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     startNextGame: manager ? startNextGame : undefined,
     getRoomCode: getRoomCode,
     save: saveRoom,
-    isManager: isManager
+    isManager: isManager,
+    finishGame: finishGame
   };
 };
