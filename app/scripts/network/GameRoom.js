@@ -147,6 +147,10 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     remoteRoom.set(gameInfo, cb);
   }
 
+  function isManager() {
+    return manager;
+  }
+
   return {
     leaveRoom: leaveRoom,
     getLeaderboard: getLeaderboard,
@@ -157,6 +161,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     addScore: addScore,
     startNextGame: manager ? startNextGame : undefined,
     getRoomCode: getRoomCode,
-    save: saveRoom
+    save: saveRoom,
+    isManager: isManager
   };
 };

@@ -1,4 +1,13 @@
+body {
+  background-color: #079EED;
+}
+
+#game-menu {
+  background-color: #EBE38D;
+}
+
 #network-game-menu {
+  background-color: #E36E64;
   .game-code-input {
     display: none;
   }
@@ -11,4 +20,8 @@
       width: 100%;
     }
   }
+}
+
+#options-screen {
+  background-color: #079EED;
 }
