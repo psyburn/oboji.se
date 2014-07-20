@@ -1,6 +1,6 @@
 var Utils = {
-  switchScreen: function(currentScreen, nextScreen) {
-    nextScreen.on('transitionEnd', function() {
+  switchScreen: function(nextScreen) {
+    nextScreen.$el.on('transitionEnd', function() {
       ObojiSe.currentScreen = nextScreen;
       ObojiSe.currentScreen.init();
     });
