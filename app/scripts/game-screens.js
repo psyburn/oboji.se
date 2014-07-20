@@ -28,6 +28,10 @@ _.extend(optionsScreen, {
 
   onSaveClick: function() {
     localStorage.setItem('username', this.$el.find('input').get(0).value);
+  },
+
+  onScreenShown: function() {
+    this.fillUsername();
   }
 });
 
@@ -116,20 +120,31 @@ $.extend(gameScreen, {
     Utils.switchScreen(optionsScreen);
   },
 
+
   onGameStart: function() {
     this.$currentColorOverlay
+  },
+
+  setDescription: function(description) {
+    this.$el.find('.network-game-description').get(0).innerHTML = description;
+  },
+
+  onScreenShown: function() {
+    this.setDescription('test');
+    this.setPlayerCount('555');
   }
 });
 
 
 gameScreen.init();
 optionsScreen.init();
-optionsScreen.fillUsername();
 gameMenuScreen.init();
 // networkGameLobbyScreen.init();
 // networkGameLobbyScreen.setDescription('test');
 // networkGameLobbyScreen.setPlayerCount('555');
 
+
+networkGameLobbyScreen.init();
 
 
 var networkGameMenuScreen;
