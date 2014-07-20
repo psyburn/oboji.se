@@ -2,7 +2,7 @@ var Screen = function() {
   return {
     init: function() {
       $('.screen').hide();
-      $('#menu').show();
+      $('#game-menu').show();
     },
 
     changeScreen: function(screenID) {
