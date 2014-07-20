@@ -16,7 +16,12 @@
       return parseInt(val * 3, 10);
     };
 
+    var rotationOffsetToColorOffset = function(val) {
+      return val * 3;
+    };
+
     var setElement = function(el) {
+      clearElement();
       $el = el;
       Core.motion.enable(onMotionAcceleration, onMotionRotation);
     };
@@ -34,6 +39,8 @@
 
     var onMotionRotation = function(alpha, beta, gamma) {
       console.log('on motion rotation', alpha, beta, gamma);
+      color.setRGB(color.r + rotationOffsetToColorOffset(alpha), color.g + rotationOffsetToColorOffset(beta), color.b + rotationOffsetToColorOffset(gamma));
+      updateColor();
     };
 
     var updateColor = function() {
