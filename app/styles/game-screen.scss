@@ -1,0 +1,65 @@
+
+.game-screen {
+  .game-topbar {
+    position:absolute;
+    height: 8rem;
+    background: #444;
+    z-index: 1000;
+    top: 0;
+
+    position: relative;
+    -webkit-perspective: 1200px;
+    -moz-perspective: 1200px;
+    perspective: 1200px;
+
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+
+    -webkit-transition: all 2200ms ease-in-out;
+
+  }
+
+  .game-topbar.hide {
+    top: -100%;
+  }
+
+  .color1 {
+    position: absolute;
+    top: 50%; bottom:0;left:50%;right:0;
+    margin-left:-50px; margin-top: -50px;
+    width:100px; height: 100px;
+    -webkit-transform: scale(20);
+    z-index: 20;
+    background: lime;
+    -webkit-transition: all 1500ms ease-in-out;
+    border-radius:50%;
+  }
+
+  .color1.morph-to-target {
+    background-color: orangered;
+  }
+
+  .color1.morph-to-start {
+   background-color: lime;
+  }
+
+  .color2 {
+    position: absolute;
+    top: 0; bottom:0;left:0;right:0;
+    z-index: 10;
+    background: lime;
+  }
+
+  .color1.shrink {
+    z-index: 40;
+    -webkit-transform: scale(1);
+  }
+}
