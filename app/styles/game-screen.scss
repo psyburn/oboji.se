@@ -54,4 +54,15 @@
     z-index: 40;
     -webkit-transform: scale(1);
   }
+
+  .timer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    font-size: 20px;
+    text-align: center;
+    color: #000;
+    z-index: 10;
+  }
 }

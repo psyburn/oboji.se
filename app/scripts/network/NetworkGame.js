@@ -51,10 +51,12 @@ NetworkGame = function(player) {
     options.games = {};
     options.expectedScores = 0;
     if (options.public) {
-      publicRoomList.push({
+      var room = {
         roomCode: options.roomCode,
         lastActive: options.lastActive
-      });
+      };
+      publicRoomList.push(room);
+      publicRooms.push(room);
     }
     remoteRooms.child(options.roomCode).set(options);
 
@@ -67,16 +69,18 @@ NetworkGame = function(player) {
 
   function getPublicRooms(cb) {
     var publicRoomsInfo = [];
-    var lastActiveLimit = getServerTime() - 5 * 60 * 1000;
+    var publicRoomArray = _.clone(publicRooms);
+    var lastActiveLimit = getServerTime() - 50 * 60 * 1000;
     
     function loadRoom() {
-      var roomCode = publicRooms.shift();
-      if (roomCode) {
-        getRoomInfo(roomCode, function(room) {
+      var publicRoom = publicRoomArray.shift();
+      if (publicRoom) {
+        getRoomInfo(publicRoom.roomCode, _.bind(function(room) {
           if (_.values(room.players || []).length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
             publicRoomsInfo.push(room);
           }
-        });
+          loadRoom();
+        }, this));
       } else {
         cb(publicRoomsInfo);
       }
@@ -89,7 +93,7 @@ NetworkGame = function(player) {
     if (activeRoom && activeRoom.roomCode === roomCode) {
       cb(activeRoom);
     } else {
-      getRoomInfo(roomCode, function(room) {
+      getRoomInfo(roomCode, _.bind(function(room) {
         if (!room) {
           return cb(false);
         }
@@ -97,12 +101,12 @@ NetworkGame = function(player) {
           activeRoom.leaveRoom();
         }
 
-        debugger
-        var key = (+new Date()) + '-' + Math.random(); // A very stupid way to do this, but it should work without much logic
+        var key = ((+new Date()) + '-' + Math.random()).replace('0.', ''); // A very stupid way to do this, but it should work without much logic
         room.players[key] = player;
         activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + roomCode), room, player, false, this);
+        activeRoom.save.call(activeRoom);
         cb(activeRoom);
-      });
+      }, this));
     }
   }
 
