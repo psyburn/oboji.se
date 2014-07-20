@@ -1,21 +1,44 @@
 /*global Screen, Core, Utils, _*/
 'use strict';
 
+/* Game menu screen */
 var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
 
+
+
+_.extend(gameMenuScreen, {
+  setListeners: function() {
+    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+    this.$el.find('.options-button').on('click', this.onOptionsClick);
+    this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
+  },
+
+  onNetworkGameClick: function() {
+    Utils.switchScreen(networkGameMenu);
+  },
+
+  onRandomNetworkGameClick: function() {
+    Utils.switchScreen(gameScreen);
+    gameScreen.startGame('peru', 'chocolate', 10);
+  },
+
+  onOptionsClick: function() {
+    Utils.switchScreen(optionsScreen);
+  },
+});
+
+gameMenuScreen.init();
+
+
+
+/* Options screen */
 var optionsScreen = new Screen({
   id: 'options-screen'
 });
 
-var gameScreen = new Screen({
-  id: 'game-screen'
-});
-
-var networkGameLobbyScreen = new Screen({
-  id: 'network-game-lobby'
-});
+optionsScreen.init();
 
 _.extend(optionsScreen, {
   fillUsername: function() {
@@ -41,20 +64,11 @@ _.extend(optionsScreen, {
 });
 
 
-_.extend(gameMenuScreen, {
-  setListeners: function() {
-    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
-    this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
-  },
 
-  onNetworkGameClick: function() {
-    Utils.switchScreen(optionsScreen);
-  },
+/* Network game lobby screen */
 
-  onRandomNetworkGameClick: function() {
-    Utils.switchScreen(gameScreen);
-    gameScreen.startGame('peru', 'chocolate', 10);
-  }
+var networkGameLobbyScreen = new Screen({
+  id: 'network-game-lobby'
 });
 
 _.extend(networkGameLobbyScreen, {
@@ -72,9 +86,18 @@ _.extend(networkGameLobbyScreen, {
 
   setDescription: function(description) {
     this.$el.find('.network-game-description').html(description);
+  },
+
+
+  onScreenShown: function() {
+
   }
 });
 
+networkGameLobbyScreen.init();
+
+
+/* Network game screen */
 
 var networkGameMenu = new Screen({
   id: 'network-game-menu'
@@ -105,7 +128,19 @@ _.extend(networkGameMenu, {
   }
 });
 
+networkGameMenu.init();
+
+
+
+/* Game screen */
+
 var gameScreen = window.gameScreen = new Screen({
+  id: 'game-screen'
+});
+
+
+
+var gameScreen = new Screen({
   id: 'game-screen'
 });
 
@@ -124,7 +159,6 @@ $.extend(gameScreen, {
   onNetworkGameClick: function() {
     Utils.switchScreen(optionsScreen);
   },
-
 
   onGameStart: function() {
     Core.colorChanger.setElement(this.$('.color1'));
@@ -163,7 +197,6 @@ $.extend(gameScreen, {
     me.setStartColor(startColor);
     me.setTargetColor(targetColor);
     me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
-
       setTimeout(function() {
         me.hideTopbar();
         me.shrinkTargetColor();
@@ -195,19 +228,7 @@ $.extend(gameScreen, {
     $('.color2').css({
       backgroundColor: targetColor
     });
-  },
-
-  setDescription: function(description) {
-    this.$el.find('.network-game-description').html(description);
-  },
-
-  onScreenShown: function() {
-    this.setDescription('test');
   }
 });
 
-optionsScreen.init();
-gameMenuScreen.init();
-networkGameMenu.init();
-networkGameLobbyScreen.init();
 gameScreen.init();
