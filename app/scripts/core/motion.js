@@ -82,16 +82,44 @@ Core.motion = (function() {
     }
   });
 
+  function RotationDimen(name) {
+    this.name = name;
+    this.val = 0;
+  }
+
+  _.extend(RotationDimen.prototype, {
+    update: function(val) {
+      val = parseInt(val);
+      this.lastVal = this.val;
+      this.val = val;
+      this.delta = val - this.lastVal;
+      this.absDelta = Math.abs(this.delta);
+
+      if (this.absDelta > 2) {
+        triggerRotation();
+      }
+    }
+  });
+
   var ad = {
     x: new AccelerationDimen('x'),
     y: new AccelerationDimen('y'),
     z: new AccelerationDimen('z')
   };
 
+  var rd = {
+    alpha: new RotationDimen('alpha'),
+    beta: new RotationDimen('beta'),
+    gamma: new RotationDimen('gamma')
+  };
+
   function update() {
     ad.x.update(event.acceleration.x);
     ad.y.update(event.acceleration.y);
     ad.z.update(event.acceleration.z);
+    rd.alpha.update(event.rotationRate.alpha);
+    rd.beta.update(event.rotationRate.beta);
+    rd.gamma.update(event.rotationRate.gamma);
   }
 
   function triggerAcceleration() {
@@ -99,7 +127,7 @@ Core.motion = (function() {
   }
 
   function triggerRotation() {
-    rotationClb();
+    rotationClb(rd.alpha.delta, rd.beta.delta, rd.gamma.delta);
   }
 
   function registerForAcceleration(clb) {
