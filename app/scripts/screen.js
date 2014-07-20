@@ -15,31 +15,3 @@ $.extend(Screen.prototype, {
     // listeners
   }
 });
-
-
-var gameMenuScreen = new Screen({
-  id: 'game-menu'
-});
-
-var optionsScreen = new Screen({
-  id: 'options-screen'
-});
-
-$.extend(gameMenuScreen, {
-  setListeners: function() {
-    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
-  },
-
-  onNetworkGameClick: function() {
-    Utils.switchScreen(optionsScreen);
-  }
-});
-
-gameMenuScreen.init();
-
-var networkGameMenuScreen;
-
-var networkGameLobbyScreen;
-
-var gameScreen;
-
