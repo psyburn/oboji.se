@@ -17,49 +17,37 @@
   </head>
   <body>
 
+  <div id="pt-main" class="pt-perspective">
+    <div class="pt-page" id="game-menu">
+      <div class="button network-game-random-start-button"></div>
+      <div class="button network-game-button"></div>
+      <div class="button options-button"></div>
+    </div>
 
-  <div class="hero-unit">
-    <h1>IDK.JS Rides again!</h1>
-    <h1></h1>
+    <div class="pt-page" id="options-screen">
+    </div>
 
-    <p>We are</p>
-    <ul>
-      <li>Awesome</li>
-      <li>Beautifull</li>
-      <li>Sexy</li>
-    </ul>
-  </div>
+    <div class="pt-page" id="network-game-menu">
+      <div class="public-private-chooser"></div>
+      <div class="game-code-container"></div>
+      <div class="button network-game-start-button"></div>
+    </div>
 
+    <div class="pt-page" id="network-game-lobby">
+      <div class="player-count"></div>
+      <div class="button game-start-button"></div>
+    </div>
 
-
-  <div id="game-menu" class="screen">
-    <div class="button network-game-random-start-button"></div>
-    <div class="button network-game-button"></div>
-    <div class="button options-button"></div>
-  </div>
-
-  <div id="options-screen" class="screen">
-  </div>
-
-  <div id="network-game-menu" class="screen">
-    <div class="public-private-chooser"></div>
-    <div class="game-code-container"></div>
-    <div class="button network-game-start-button"></div>
-  </div>
-
-  <div id="network-game-lobby" class="screen">
-    <div class="player-count"></div>
-    <div class="button game-start-button"></div>
-  </div>
-
-  <div id="game-screen" class="screen">
-    <div class="overlay-current-color"></div>
-    <div class="target-color"></div>
+    <div class="pt-page" id="game-screen" data-first-screen="true">
+      <div class="overlay-current-color"></div>
+      <div class="target-color"></div>
+    </div>
   </div>
 
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
   <script src="../bower_components/jquery/dist/jquery.js"></script>
+  <script src="../bower_components/firebase/firebase-debug.js"></script>
   <script src="../bower_components/lodash/dist/lodash.compat.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
@@ -75,6 +63,8 @@
   </script> -->
 
   <!-- build:js({app,.tmp}) scripts/main.js -->
+  <script src="scripts/network/GameRoom.js"></script>
+  <script src="scripts/network/NetworkGame.js"></script>
   <script src="scripts/main.js"></script>
   <script src="scripts/screen.js"></script>
   <!-- endbuild -->
