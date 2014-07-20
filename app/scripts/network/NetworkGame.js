@@ -31,7 +31,7 @@ NetworkGame = function(player) {
     options.roomCode = generateKey();
     options.created = options.lastActive = getServerTime();
     options.manager = player;
-    options.players = [player];
+    options.players = { 0: player };
     options.scores = {};
     options.games = {};
     if (options.public) {
@@ -57,7 +57,7 @@ NetworkGame = function(player) {
       var roomCode = publicRooms.shift();
       if (roomCode) {
         getRoomInfo(roomCode, function(room) {
-          if (room.players.length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
+          if (_.values(room.players || []).length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
             publicRoomsInfo.push(room);
           }
         });
@@ -77,6 +77,9 @@ NetworkGame = function(player) {
         if (activeRoom) {
           activeRoom.leaveRoom();
         }
+
+        var key = (+new Date()) + '-' + Math.random(); // A very stupid way to do this, but it should work without much logic
+        room.players[key] = player;
         activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + roomCode), room, player, false, this);
         cb(activeRoom);
       });

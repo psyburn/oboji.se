@@ -4,6 +4,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   'use strict';
 
   var listeners = {};
+  var scoreExpected = false;
 
   function trigger(eventName) {
     listeners[eventName] = listeners[eventName] || [];
@@ -12,6 +13,13 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
       listeners[eventName][i].cb.apply(listeners[eventName][i].scope, args);
     }
   }
+
+  on('game:next', function() {
+    scoreExpected = true;
+  });
+  on('game:done', function() {
+    scoreExpected = false;
+  });
 
   remoteRoom.on('value', _.bind(function(snapshot) {
     var newInfo = snapshot.val() || {};
@@ -33,10 +41,9 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
 
     var newScores = _.values(newInfo.scores || {});
     var oldScores = _.values(gameInfo.scores || {});
-    var newPlayers = _.values(gameInfo.players || []);
 
     if (newScores.length > oldScores.length &&
-        newScores.length === newGames.length * newPlayers.length) {
+        newScores.length === newInfo.expectedScores) {
       trigger('game:done');
     }
 
@@ -53,8 +60,8 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
       goalColor: goalColor
     };
     gameInfo.games[gameCount] = game;
+    gameInfo.expectedScores += _.values(gameInfo.players || []).length;
     saveRoom(_.bind(function() {
-      debugger
       if (!gameCount) {
         trigger('game:start');
       }
@@ -63,8 +70,11 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   }
 
   function leaveRoom() {
-    gameInfo.players = _.without(gameInfo.players, player);
+    gameInfo.players = _.reject(gameInfo.players, player);
     saveRoom();
+    if (scoreExpected) {
+      addScore(0);
+    }
   }
 
   function getLeaderboard() {
