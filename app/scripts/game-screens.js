@@ -239,6 +239,9 @@ var gameScreen = window.gameScreen = new Screen({
 });
 
 $.extend(gameScreen, {
+  startRules: 'This is your starting color color<br> Change it by moving you mobile left, right, up, down, forward, back',
+  targetRules: 'This is your target color. Match the starting color with the target color. Good luck.',
+
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
