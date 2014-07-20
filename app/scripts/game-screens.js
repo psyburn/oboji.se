@@ -251,16 +251,14 @@ var gameScreen = window.gameScreen = new Screen({
 });
 
 $.extend(gameScreen, {
-  startRules: 'This is your starting color color<br> Change it by moving you mobile left, right, up, down, forward, back',
-  targetRules: 'This is your target color. Match the starting color with the target color. Good luck.',
-
+  startRules: 'This is your target color color! Change the color of the whole screen by moving you mobile left, right, up, down, forward, back. Try to match the circle!',
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
 
   init: function() {
     this.setListeners();
-    this.setTopbarText('Waiting for other unicorns...');
+    this.setTopbarText(this.startRules);
     this.$timer = this.$('.timer');
   },
 
@@ -389,7 +387,7 @@ $.extend(gameScreen, {
   },
 
   setTopbarText: function(text) {
-    this.$el.find('.game-topbar').text(text);
+    this.$el.find('.game-topbar').html(text);
   },
 
   setStartColor: function(startColor) {
