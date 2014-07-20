@@ -78,15 +78,17 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   }
 
   function getLeaderboard() {
-    var groups = _.groupBy(_.values(gameInfo.scores || []), player);
+    var groups = _.groupBy(_.values(gameInfo.scores || []), function(score) {
+      return score.player.id;
+    });
     var scores = [];
-    _.each(groups, function(group, groupPlayer) {
+    _.each(groups, function(group) {
       var score = 0;
       for (var i = 0; i < group.length; i++) {
         score += group[i].score;
       }
       scores.push({
-        player: groupPlayer,
+        player: group[0].player,
         score: score
       });
     });

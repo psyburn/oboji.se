@@ -3,6 +3,15 @@
 NetworkGame = function(player) {
   'use strict';
 
+  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+
+  if (typeof player === 'string') {
+    player = {
+      name: player
+    };
+  }
+  player.id = generateKey() + '-' + (+new Date());
+
   var rootPath = 'https://oboji-se.firebaseio.com/';
 
   var publicRoomList = new Firebase(rootPath + 'public-rooms');
@@ -13,8 +22,6 @@ NetworkGame = function(player) {
   offsetRef.on('value', function(snap) {
     timeOffset = snap.val();
   });
-
-  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   var activeRoom = null;
   var publicRooms = [];
@@ -34,6 +41,7 @@ NetworkGame = function(player) {
     options.players = { 0: player };
     options.scores = {};
     options.games = {};
+    options.expectedScores = 0;
     if (options.public) {
       publicRoomList.push({
         roomCode: options.roomCode,
