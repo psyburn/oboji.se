@@ -2,7 +2,6 @@ $default-button-color: red;
 $default-screen-background: white;
 
 .button {
-  background: $default-button-color;
   height: 45px;
   line-height: 45px;
   width: 100%;
@@ -14,5 +13,13 @@ $default-screen-background: white;
   white-space: nowrap;
   text-transform: uppercase;
   text-align: center;
+  border-bottom: 1px solid #555;
 }
 
+.switch-candy {
+  border-radius: 0;
+}
+
+.input-field {
+  width: 100%;
+}

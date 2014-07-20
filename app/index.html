@@ -22,13 +22,10 @@
   <div id="pt-main" class="pt-perspective">
 
     <div class="pt-page" id="game-menu" data-first-page>
-      <div class="button network-game-random-start-button">Start Radnom Network Game</div>
-      <div class="button network-game-button">Network Game</div>
+      <div class="button network-game-random-start-button">Start Random Network Game</div>
+      <div class="button network-game-button">Create Network Game</div>
+      <div class="button join-network-game-button">Join Network Game</div>
       <div class="button options-button">Options</div>
-    </div>
-
-    <div class="pt-page" id="options-screen">
-    kreso je lijep ko slika
     </div>
 
     <div class="pt-page" id="network-game-menu">
@@ -42,13 +39,20 @@
         </div>
         </div>
       <div class="game-code-container">
-        <input type="text" value="" class="game-code-input" placeholder="Game Code">
+        <div class="game-code-input">Code: </div>
       </div>
-      <div class="button network-game-start-button">Start Game</div>
+      <div class="button network-game-start-button">Create Game</div>
+    </div>
+
+    <div class="pt-page" id="join-network-game-menu">
+      <div class="game-code-container">
+        <input type="text" value="" class="input-field game-code-input" placeholder="Game Code">
+      </div>
+      <div class="button network-game-start-button">Join Game</div>
     </div>
 
     <div class="pt-page" id="options-screen">
-      <input type="text" placeholder="username" value=""/>
+      <input type="text" class="input-field" placeholder="username" value=""/>
       <div class="button save-options-button">Save</div>
     </div>
 
@@ -63,6 +67,15 @@
       <div class="color1"></div>
       <div class="color2"></div>
       <div class="timer"></div>
+    </div>
+
+    <div class="pt-page game-screen " id="result-screen" >
+      <div class="winning-message">
+
+      </div>
+      <div class="next-game-message">
+
+      </div>
     </div>
 
   </div>
