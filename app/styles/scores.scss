@@ -1,0 +1,38 @@
+.players-container {
+  h2 {
+    text-align: center;
+  }
+
+  .scores {
+    padding: 0;
+    width: 100%;
+    list-style: none;
+
+    .player {
+      height: 3rem;
+      border-top: 1px solid #555;
+      padding: 0 2rem;
+
+      span {
+        padding: .5rem;
+      }
+
+      .player-name {
+        float: left;
+      }
+
+      .player-score {
+        float: right;
+      }
+    }
+    .player:last-child {
+      border-bottom: 1px solid #555;
+    }
+  }
+}
+
+.next-game-message {
+  font-size: 1.6rem;
+  text-align: center;
+  padding: 1rem;
+}
