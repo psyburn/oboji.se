@@ -1,16 +1,28 @@
-var Screen = function() {
-  return {
-    init: function() {
-      $('.screen').hide();
-      $('#menu').show();
-    },
+'use strict';
 
-    changeScreen: function(screenID) {
-      $('.screen').hide();
-      $('#' + screenID).show();
-    }
+var Screen = function(options) {
+  this._init(options);
+  this.setListeners();
+};
+
+$.extend(Screen.prototype, {
+  _init: function(options) {
+    this.$el = $('#' + options.id);
+  },
+  init: function(options) {
+    // game logic
+  },
+  setListeners: function(options) {
+    // listeners
   }
-}
+});
 
-var menuScreen = new Screen();
-menuScreen.init();
+
+var gameMenu = new Screen({
+  id: 'game-menu',
+  setListeners: function() {
+    this.$el.on('click', function(){
+      // smth
+    })
+  }
+});
