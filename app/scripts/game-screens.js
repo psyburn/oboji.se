@@ -41,8 +41,12 @@ _.extend(gameMenuScreen, {
       var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
 
       roomInfo.joinRoom(roomInfo.roomCode, function(room) {
-        Utils.switchScreen(gameScreen);
-        gameScreen.startGame();
+        if (room === false) {
+          window.alert('Mrš!');
+        } else {
+          Utils.switchScreen(gameScreen);
+          gameScreen.startGame();
+        }
       });
     });
   },
@@ -207,9 +211,15 @@ _.extend(joinNetworkGameMenu, {
   },
 
   onGameStartClick: function() {
+    var me = this;
     networkGame.joinRoom(this.getGameCodeValue(), function(inRoom) {
-      room = inRoom;
-      Utils.switchScreen(networkGameLobbyScreen);
+      if (inRoom === false) {
+        me.$('.game-code-input').val('');
+        window.alert('Mrš!');
+      } else {
+        room = inRoom;
+        Utils.switchScreen(networkGameLobbyScreen);
+      }
     });
   },
 
