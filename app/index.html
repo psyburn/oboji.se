@@ -17,20 +17,6 @@
   </head>
   <body>
 
-
-  <div class="hero-unit">
-    <h1>IDK.JS Rides again!</h1>
-    <h1></h1>
-
-    <p>We are</p>
-    <ul>
-      <li>Awesome</li>
-      <li>Beautifull</li>
-      <li>Sexy</li>
-    </ul>
-  </div>
-
-
   <div id="pt-main" class="pt-perspective">
     <div class="pt-page" id="game-menu">
       <div class="button network-game-random-start-button"></div>
@@ -52,7 +38,7 @@
       <div class="button game-start-button"></div>
     </div>
 
-    <div class="pt-page" id="game-screen">
+    <div class="pt-page" id="game-screen" data-first-screen="true">
       <div class="overlay-current-color"></div>
       <div class="target-color"></div>
     </div>
@@ -82,6 +68,7 @@
   <script src="scripts/network/NetworkGame.js"></script>
   <script src="scripts/page-transitions.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/screen.js"></script>
   <!-- endbuild -->
 </body>
 </html>
