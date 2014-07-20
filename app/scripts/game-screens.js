@@ -5,6 +5,28 @@ var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
 
+_.extend(gameMenuScreen, {
+  setListeners: function() {
+    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+    this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
+  },
+
+  onNetworkGameClick: function() {
+    Utils.switchScreen(optionsScreen);
+  },
+
+  onRandomNetworkGameClick: function() {
+    Utils.switchScreen(gameScreen);
+    gameScreen.startGame('peru', 'chocolate', 10);
+  }
+});
+
+gameMenuScreen.init();
+
+
+
+
+
 var optionsScreen = new Screen({
   id: 'options-screen'
 });
@@ -41,21 +63,6 @@ _.extend(optionsScreen, {
 });
 
 
-_.extend(gameMenuScreen, {
-  setListeners: function() {
-    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
-    this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
-  },
-
-  onNetworkGameClick: function() {
-    Utils.switchScreen(optionsScreen);
-  },
-
-  onRandomNetworkGameClick: function() {
-    Utils.switchScreen(gameScreen);
-    gameScreen.startGame('peru', 'chocolate', 10);
-  }
-});
 
 _.extend(networkGameLobbyScreen, {
   setListeners: function() {
@@ -205,7 +212,7 @@ $.extend(gameScreen, {
 });
 
 optionsScreen.init();
-gameMenuScreen.init();
+
 networkGameMenu.init();
 networkGameLobbyScreen.init();
 gameScreen.init();
