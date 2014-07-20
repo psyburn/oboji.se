@@ -21,6 +21,29 @@ gameMenuScreen.init();
 
 
 
+var gameScreen = new Screen({
+  id: 'game-screen'
+});
+
+$.extend(gameScreen, {
+
+  setListeners: function() {
+    this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+    this.$currentColorOverlay = this.$('.overlay-current-color');
+  },
+
+
+  onNetworkGameClick: function() {
+    Utils.switchScreen(optionsScreen);
+  },
+
+  onGameStart: function() {
+    this.$currentColorOverlay
+  }
+});
+
+gameScreen.init();
+
 
 var networkGameMenuScreen;
 
