@@ -198,7 +198,7 @@ $.extend(gameScreen, {
   },
 
   setDescription: function(description) {
-    this.$el.find('.network-game-description').get(0).innerHTML = description;
+    this.$el.find('.network-game-description').html(description);
   },
 
   onScreenShown: function() {
