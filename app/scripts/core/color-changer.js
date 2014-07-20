@@ -17,7 +17,11 @@
     };
 
     var rotationOffsetToColorOffset = function(val) {
-      return val * 3;
+      return parseInt(val * 3);
+    };
+
+    var getEl = function() {
+      return $el;
     };
 
     var setElement = function(el) {
@@ -32,28 +36,29 @@
     };
 
     var onMotionAcceleration = function(offsetX, offsetY, offsetZ) {
-      console.log('on motion acceleration', offsetX, offsetY, offsetZ);
+      // console.log('on motion acceleration', offsetX, offsetY, offsetZ);
       color.setRGB(color.r + motionOffsetToColorOffset(offsetX), color.g + motionOffsetToColorOffset(offsetY), color.b + motionOffsetToColorOffset(offsetZ));
       updateColor();
     };
 
     var onMotionRotation = function(alpha, beta, gamma) {
-      console.log('on motion rotation', alpha, beta, gamma);
+      // console.log('on motion rotation', alpha, beta, gamma);
       color.setRGB(color.r + rotationOffsetToColorOffset(alpha), color.g + rotationOffsetToColorOffset(beta), color.b + rotationOffsetToColorOffset(gamma));
       updateColor();
     };
 
     var updateColor = function() {
-      console.log(color.r, color.g, color.b);
+      // console.log(color.r, color.g, color.b);
       if ($el) {
-        $el.css('background-color', 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',1)');
+        $el.css('background-color', 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')');
       }
     };
 
     return {
       setElement: setElement,
       clearElement: clearElement,
-      updateColor: updateColor
+      updateColor: updateColor,
+      getEl: getEl
     };
   })();
 
