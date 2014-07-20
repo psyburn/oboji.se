@@ -38,24 +38,16 @@
     width:100px; height: 100px;
     -webkit-transform: scale(20);
     z-index: 20;
-    background: lime;
     -webkit-transition: all 1500ms ease-in-out;
     border-radius:50%;
-  }
-
-  .color1.morph-to-target {
-    background-color: orangered;
-  }
-
-  .color1.morph-to-start {
-   background-color: lime;
+    background: white;
   }
 
   .color2 {
     position: absolute;
     top: 0; bottom:0;left:0;right:0;
     z-index: 10;
-    background: lime;
+    background: white;
   }
 
   .color1.shrink {

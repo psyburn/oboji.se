@@ -24,7 +24,7 @@ $.extend(gameMenuScreen, {
 
   onRandomNetworkGameClick: function() {
     Utils.switchScreen(gameScreen);
-
+    gameScreen.startGame('peru', 'chocolate', 10);
   }
 });
 gameMenuScreen.init();
@@ -53,9 +53,10 @@ $.extend(gameScreen, {
 
   startGame: function(startColor, targetColor, time) {
     var me = this;
+    me.setStartColor(startColor);
+    me.setTargetColor(targetColor);
     me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
 
-      this.setStartColor(startColor);
       setTimeout(function() {
         me.hideTopbar();
         me.shrinkTargetColor();
