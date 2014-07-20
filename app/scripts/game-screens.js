@@ -9,6 +9,14 @@ var room;
 
 var startColor, targetColor;
 
+var startNextGame = function() {
+  if (room.isManager()) {
+    startColor = Core.Color.generateRandomRgbString();
+    targetColor = Core.Color.generateRandomRgbString();
+    room.startNextGame(startColor, targetColor);
+  }
+};
+
 
 /* Game menu screen */
 var gameMenuScreen = new Screen({
@@ -24,7 +32,11 @@ _.extend(gameMenuScreen, {
   },
 
   onNetworkGameClick: function() {
-    Utils.switchScreen(networkGameMenu);
+    room = networkGame.createRoom({
+      'public': false,
+      maxPlayers: 100
+    });
+    Utils.switchScreen(networkGameLobbyScreen);
   },
 
   onJoinNetworkGameClick: function() {
@@ -247,16 +259,14 @@ var gameScreen = window.gameScreen = new Screen({
 });
 
 $.extend(gameScreen, {
-  startRules: 'This is your starting color color<br> Change it by moving you mobile left, right, up, down, forward, back',
-  targetRules: 'This is your target color. Match the starting color with the target color. Good luck.',
-
+  startRules: 'This is your target color color! Change the color of the whole screen by moving you mobile left, right, up, down, forward, back. Try to match the circle!',
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
 
   init: function() {
     this.setListeners();
-    this.setTopbarText('Waiting for other unicorns...');
+    this.setTopbarText(this.startRules);
     this.$timer = this.$('.timer');
   },
 
@@ -288,7 +298,24 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
-    room.addScore(100);
+
+    var targetColor = this.$('.color2');
+    var startColor = this.$('.color1');
+
+    var targetRGB = targetColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+    var startRGB = startColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+
+    var delta = function(old, newVal) {
+      return Math.abs(old - newVal);
+    };
+
+    var score = delta(targetRGB[0], startRGB[0]) + delta(targetRGB[1], startRGB[1]) + delta(targetRGB[2], startRGB[2]);
+
+    room.addScore(256 * 3 - score);
   },
 
   startGame: function() {
@@ -326,11 +353,7 @@ $.extend(gameScreen, {
     room.on('game:finish', this.onGameFinish, this);
     room.on('game:changed', this.onGameChange, this);
 
-    if (room.isManager()) {
-      startColor = 'red';
-      targetColor = 'green';
-      room.startNextGame(startColor, targetColor);
-    }
+    startNextGame();
 
     var me = this;
     me.setStartColor(startColor);
@@ -352,7 +375,10 @@ $.extend(gameScreen, {
   },
 
   onGameNext: function() {
-    console.log('next');
+    if (room.isManager()) {
+      Utils.switchScreen(gameScreen);
+      // gameScreen.startGame();
+    }
   },
 
   onGameDone: function() {
@@ -362,7 +388,8 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
-    alert('Finish');
+    Utils.switchScreen(resultsScreen);
+    // alert('Finish');
     // room.getLeaderboard();
   },
 
@@ -384,7 +411,7 @@ $.extend(gameScreen, {
   },
 
   setTopbarText: function(text) {
-    this.$el.find('.game-topbar').text(text);
+    this.$el.find('.game-topbar').html(text);
   },
 
   setStartColor: function(startColor) {
@@ -428,28 +455,33 @@ _.extend(resultsScreen, {
   setWinningMessage: function(playerWon) {
     var username = localStorage.getItem('username');
     if (playerWon) {
-      this.$el.find('.winning-message').text('Awesome, ' + username + '! You have won this round.');
+      this.$el.find('.winning-message').html('Awesome, ' + username + '!<br />You have won this round.');
     } else {
-      this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
+      this.$el.find('.winning-message').html('Awwww, ' + username + ', you didn\'t win :( :(<br />Try your luck in the next round');
     }
   },
-  onScreenShown: function() {},
+
+  onScreenShown: function() {
+    var board = room.getLeaderboard();
+    this.setData(board);
+    var myPlayer = room.getPlayer();
+    this.setWinningMessage(board[0].player.id === myPlayer.id);
+
+    setTimeout(startNextGame, 5000);
+  },
+
   setData: function(data) {
     var playersList = $('<ul>').addClass('scores');
     var playerItem;
     var playerName;
     var playerScore;
 
-    data = _.sortBy(data, function(player) {
-      return -parseInt(player.score, 10);
-    });
-
     playerName = $('<span>').addClass('player-name');
     playerScore = $('<span>').addClass('player-score');
     playerItem = $('<li>').addClass('player');
 
     _.each(data, function(player) {
-      var newName = playerName.clone().text(player.name);
+      var newName = playerName.clone().text(player.player.name);
       var newScore = playerScore.clone().text(player.score);
       var newPlayer = playerItem.clone();
       newPlayer.append(newName);
