@@ -121,7 +121,7 @@ var PageTransitions = (function() {
 
   function resetPage($outpage, $inpage) {
     $outpage.attr('class', $outpage.data('originalClassList'));
-    $inpage.attr('class', $inpage.data('originalClassList') + 'pt-page-current');
+    $inpage.attr('class', $inpage.data('originalClassList') + ' pt-page-current');
   }
 
   $(function() {

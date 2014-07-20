@@ -38,8 +38,6 @@ var optionsScreen = new Screen({
   id: 'options-screen'
 });
 
-optionsScreen.init();
-
 _.extend(optionsScreen, {
   fillUsername: function() {
     var previousUsername = localStorage.getItem('username');
@@ -56,12 +54,15 @@ _.extend(optionsScreen, {
 
   onSaveClick: function() {
     localStorage.setItem('username', this.$el.find('input').get(0).value);
+    Utils.switchScreen(gameMenuScreen);
   },
 
   onScreenShown: function() {
     this.fillUsername();
   }
 });
+
+optionsScreen.init();
 
 
 
@@ -86,11 +87,6 @@ _.extend(networkGameLobbyScreen, {
 
   setDescription: function(description) {
     this.$el.find('.network-game-description').html(description);
-  },
-
-
-  onScreenShown: function() {
-
   }
 });
 
