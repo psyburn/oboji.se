@@ -124,12 +124,21 @@ _.extend(networkGameLobbyScreen, {
 
   joinGame: function() {
     Utils.switchScreen(gameScreen);
-    gameScreen.setRoom(room);
+    gameScreen.startGame();
   },
 
   updateTexts: function() {
     this.$('.room-code').text(room.getRoomCode());
     this.$('.player-count').text(_.values(room.get('players')).length);
+
+    if (!room.isManager()) {
+      this.$('.game-start-button').hide();
+      this.$('.game-will-start-soon').show();
+    } else {
+      this.$('.game-start-button').show();
+      this.$('.game-will-start-soon').hide();
+    }
+
   },
 
   setPlayerCount: function(playerCount) {
@@ -272,6 +281,28 @@ $.extend(gameScreen, {
   },
 
   startGame: function() {
+    // =======
+    //   startGame: function(room, startColor, targetColor, time) {
+    //     var me = this;
+    //     window.$game = this.$el;
+
+    //     me.$el.on('showStartColor', function() {
+    //       me.setStartColor(startColor);
+    //     });
+
+    //     me.$el.on('showTargetColor', function() {
+    //       me.showTargetColor(targetColor);
+    //     });
+
+    //     me.$el.on('showGameScreen', function() {
+    //       me.setTargetColor(startColor);
+    //       me.hideTopbar();
+    //       me.shrinkTargetColor();
+    //       me.$el.trigger('game-start-animation-finished');
+    //       me.onGameStart();
+    //     });
+    //   },
+
     if (room) {
       room.off('game:next', this.onGameNext, this);
       room.off('game:done', this.onGameDone, this);
@@ -346,6 +377,12 @@ $.extend(gameScreen, {
   setStartColor: function(startColor) {
     $('.color1').css({
       backgroundColor: startColor
+    });
+  },
+
+  showTargetColor: function(target) {
+    $('.color1').css({
+      backgroundColor: target
     });
   },
 

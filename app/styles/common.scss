@@ -18,8 +18,23 @@ $default-screen-background: white;
 
 .switch-candy {
   border-radius: 0;
+  height: 45px;
 }
 
 .input-field {
   width: 100%;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.label {
+  padding-top: 6px;
 }
