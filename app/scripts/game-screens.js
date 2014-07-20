@@ -8,11 +8,17 @@ var optionsScreen = new Screen({
   id: 'options-screen'
 });
 
+var networkGameLobbyScreen = new Screen({
+  id: 'network-game-lobby'
+});
+
 _.extend(optionsScreen, {
   fillUsername: function() {
     var previousUsername = localStorage.getItem('username');
     if (previousUsername) {
-      this.$el.find('input').get(0).value = previousUsername;
+      if(this.$el.find('input').get(0)) {
+        this.$el.find('input').get(0).value = previousUsername;
+      }
     }
   },
 
@@ -36,15 +42,34 @@ _.extend(gameMenuScreen, {
   }
 });
 
+_.extend(networkGameLobbyScreen, {
+  setListeners: function() {
+    this.$el.find('.game-start-button').on('click', this.onStartGameClick);
+  },
+
+  onStartGameClick: function() {
+
+  },
+
+  setPlayerCount: function(playerCount) {
+    this.$el.find('.player-count').get(0).innerHTML = playerCount;
+  },
+
+  setDescription: function(description) {
+    this.$el.find('.network-game-description').get(0).innerHTML = description;
+  }
+});
+
 optionsScreen.init();
 optionsScreen.fillUsername();
 gameMenuScreen.init();
+networkGameLobbyScreen.init();
+networkGameLobbyScreen.setDescription('test');
+networkGameLobbyScreen.setPlayerCount('555');
 
 
 
 var networkGameMenuScreen;
-
-var networkGameLobbyScreen;
 
 var gameScreen;
 
