@@ -70,7 +70,7 @@ NetworkGame = function(player) {
   function getPublicRooms(cb) {
     var publicRoomsInfo = [];
     var publicRoomArray = _.clone(publicRooms);
-    var lastActiveLimit = getServerTime() - 5 * 60 * 1000;
+    var lastActiveLimit = 0;//getServerTime() - 5 * 60 * 1000; // Disabled
     
     function loadRoom() {
       var publicRoom = publicRoomArray.shift();
