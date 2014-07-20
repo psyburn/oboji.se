@@ -259,3 +259,28 @@ $.extend(gameScreen, {
 });
 
 gameScreen.init();
+
+/* Results screen */
+
+var resultsScreen = new Screen({
+  id: 'results-screen'
+});
+
+_.extend(resultsScreen, {
+  setListeners: function() {
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
+  },
+  setWinningMessage: function(playerWon) {
+    var username = localStorage.getItem('username');
+    if (playerWon) {
+      this.$el.find('.winning-message').text('Awesome, ' + username + '! You have won this round.');
+    } else {
+      this.$el.find('.winning-message').text('Awwww, ' + username + ', you have lost :( :(');
+    }
+
+    this.$el.find('.next-game-message').text('Next game is starting in couple of seconds. Please rest your arm until then. ');
+  }
+});
+
+resultsScreen.init();
