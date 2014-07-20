@@ -457,16 +457,18 @@ _.extend(resultsScreen, {
   setWinningMessage: function(playerWon) {
     var username = localStorage.getItem('username');
     if (playerWon) {
-      this.$el.find('.winning-message').text('Awesome, ' + username + '! You have won this round.');
+      this.$el.find('.winning-message').html('Awesome, ' + username + '!<br />You have won this round.');
     } else {
-      this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
+      this.$el.find('.winning-message').html('Awwww, ' + username + ', you didn\'t win :( :(<br />Try your luck in the next round');
     }
   },
 
   onScreenShown: function() {
     var board = room.getLeaderboard();
-    this.setWinningMessage(true);
     this.setData(board);
+    var myPlayer = room.getPlayer();
+    this.setWinningMessage(board[0].player.id === myPlayer.id);
+
     setTimeout(startNextGame, 5000);
   },
 
@@ -476,16 +478,12 @@ _.extend(resultsScreen, {
     var playerName;
     var playerScore;
 
-    data = _.sortBy(data, function(player) {
-      return -parseInt(player.score, 10);
-    });
-
     playerName = $('<span>').addClass('player-name');
     playerScore = $('<span>').addClass('player-score');
     playerItem = $('<li>').addClass('player');
 
     _.each(data, function(player) {
-      var newName = playerName.clone().text(player.name);
+      var newName = playerName.clone().text(player.player.name);
       var newScore = playerScore.clone().text(player.score);
       var newPlayer = playerItem.clone();
       newPlayer.append(newName);

@@ -158,6 +158,10 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     }, this));
   }
 
+  function getPlayer() {
+    return player;
+  }
+
   return {
     leaveRoom: leaveRoom,
     getLeaderboard: getLeaderboard,
@@ -170,6 +174,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     getRoomCode: getRoomCode,
     save: saveRoom,
     isManager: isManager,
-    finishGame: finishGame
+    finishGame: finishGame,
+    getPlayer: getPlayer
   };
 };
