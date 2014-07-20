@@ -11,12 +11,17 @@ var gameMenuScreen = new Screen({
 _.extend(gameMenuScreen, {
   setListeners: function() {
     this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+    this.$el.find('.join-network-game-button').on('click', this.onJoinNetworkGameClick);
     this.$el.find('.options-button').on('click', this.onOptionsClick);
     this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
   },
 
   onNetworkGameClick: function() {
     Utils.switchScreen(networkGameMenu);
+  },
+
+  onJoinNetworkGameClick: function() {
+    Utils.switchScreen(joinNetworkGameMenu);
   },
 
   onRandomNetworkGameClick: function() {
@@ -93,7 +98,7 @@ _.extend(networkGameLobbyScreen, {
 networkGameLobbyScreen.init();
 
 
-/* Network game screen */
+/* Create Network game screen */
 
 var networkGameMenu = new Screen({
   id: 'network-game-menu'
@@ -125,6 +130,39 @@ _.extend(networkGameMenu, {
 });
 
 networkGameMenu.init();
+
+/* Join Network game screen */
+
+var joinNetworkGameMenu = new Screen({
+  id: 'join-network-game-menu'
+});
+
+_.extend(joinNetworkGameMenu, {
+  setListeners: function() {
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
+  },
+
+  getGameCodeValue: function() {
+    return this.$el.find('.game-code-input').val();
+  },
+  onGameStarClick: function() {
+    console.log('clicked game start');
+  },
+  onGameTypeChage: function() {
+    this.gameType = 'public';
+    if (this.$el.find('input:checked').val() === 'private') {
+      this.gameType = 'private';
+    }
+    if (this.gameType === 'public') {
+      this.$el.find('.game-code-input').hide();
+    } else {
+      this.$el.find('.game-code-input').show();
+    }
+  }
+});
+
+joinNetworkGameMenu.init();
 
 
 
