@@ -2,6 +2,10 @@ window.ObojiSe = {
   currentScreen: null
 };
 
+if (!localStorage.getItem('username')) {
+  localStorage.setItem('username', window.prompt('Kako se zoveš?'));
+}
+
 var GameScreens = {
   gameMenu: 'game-menu',
   optionsScreen: 'options-screen',
