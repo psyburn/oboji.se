@@ -66,8 +66,7 @@ _.extend(networkGameMenu, {
   },
   onGameTypeChage: function() {
     this.gameType = 'public';
-    var condition = false;
-    if (condition) {
+    if (this.$el.find('input:checked').val() === 'private') {
       this.gameType = 'private';
     }
     if (this.gameType === 'public') {
@@ -77,6 +76,8 @@ _.extend(networkGameMenu, {
     }
   }
 });
+
+networkGameMenu.init();
 
 
 _.extend(networkGameLobbyScreen, {
@@ -105,7 +106,6 @@ _.extend(networkGameLobbyScreen, {
 optionsScreen.init();
 gameMenuScreen.init();
 networkGameLobbyScreen.init();
-
 
 var networkGameMenuScreen;
 
