@@ -7,6 +7,7 @@ var Screen = function(options) {
 $.extend(Screen.prototype, {
   _init: function(options) {
     this.$el = $('#' + options.id);
+    this.name = options.id;
   },
   $: function(sel) {
     return this.$el.find(sel);

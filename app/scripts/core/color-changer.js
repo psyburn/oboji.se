@@ -61,6 +61,4 @@
       getEl: getEl
     };
   })();
-
-  Core.colorChanger.setElement($('body'));
 })();
