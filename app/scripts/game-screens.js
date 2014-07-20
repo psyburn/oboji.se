@@ -316,7 +316,9 @@ $.extend(gameScreen, {
     room.on('game:changed', this.onGameChange, this);
 
     if (room.isManager()) {
-      room.startNextGame();
+      startColor = 'red';
+      targetColor = 'green';
+      room.startNextGame(startColor, targetColor);
     }
 
     var me = this;
