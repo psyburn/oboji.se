@@ -457,6 +457,7 @@ _.extend(resultsScreen, {
       playersList.append(newPlayer);
     });
 
+    $('.players-container').html('');
     $('.players-container').append(playersList);
   }
 });
