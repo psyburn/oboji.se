@@ -15,6 +15,10 @@ body {
     // public-private-chooser
   }
   .game-code-container {
+    h1 {
+      margin-top: 45%;
+    }
+
     .game-code-input {
       text-align: center;
       width: 100%;
@@ -24,8 +28,21 @@ body {
 
 #options-screen {
   background-color: #abe1fd;
+  input {
+    margin-top: 45%;
+  }
 }
 
 #join-network-game-menu {
-  background-color: #abe1fd;
+  background-color: #fed1be;
+
+  .game-code-container {
+    margin-top: 45%;
+  }
+}
+
+.network-game-start-button, .save-options-button {
+  position: fixed;
+  bottom: 0;
+  border-top: 1px solid #555;
 }
