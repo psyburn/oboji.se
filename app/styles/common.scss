@@ -13,7 +13,8 @@ $default-screen-background: white;
   white-space: nowrap;
   text-transform: uppercase;
   text-align: center;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #C5C5C5;
+  color: rgb(10, 20, 136);
 }
 
 .switch-candy {
@@ -45,4 +46,9 @@ $default-screen-background: white;
 
 .label {
   padding-top: 6px;
+}
+
+
+.switch-toggle input + label {
+ padding-top: 6px;
 }
