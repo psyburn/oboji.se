@@ -9,6 +9,7 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css styles/vendor.css -->
     <!-- bower:css -->
+    <link rel="stylesheet" href="../bower_components/normalize-css/normalize.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -18,13 +19,21 @@
   <body>
 
   <div id="pt-main" class="pt-perspective">
+<<<<<<< HEAD
     <div class="pt-page" id="game-menu" data-first-screen="true">
       <div class="button network-game-random-start-button"></div>
       <div class="button network-game-button">Network Game Button</div>
       <div class="button options-button"></div>
+=======
+    <div class="pt-page" id="game-menu" data-first-page>
+      <div class="button network-game-random-start-button">Start Radnom Network Game</div>
+      <div class="button network-game-button">Network Game</div>
+      <div class="button options-button">Options</div>
+>>>>>>> fc606284af43049781d6d252d5b1a66a0045feba
     </div>
 <!--
     <div class="pt-page" id="options-screen">
+    kreso je lijep ko slika
     </div>
 
     <div class="pt-page" id="network-game-menu">
@@ -46,8 +55,9 @@
 
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
+  <script src="../bower_components/modernizr/modernizr.js"></script>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
-  <script src="../bower_components/firebase/firebase-debug.js"></script>
+  <script src="../bower_components/firebase/firebase.js"></script>
   <script src="../bower_components/lodash/dist/lodash.compat.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
@@ -63,8 +73,11 @@
   </script> -->
 
   <!-- build:js({app,.tmp}) scripts/main.js -->
+  <<script src="scripts/core/motion.js"></script>
+  <<script src="scripts/core/game.js"></script>
   <script src="scripts/network/GameRoom.js"></script>
   <script src="scripts/network/NetworkGame.js"></script>
+  <script src="scripts/page-transitions.js"></script>
   <script src="scripts/main.js"></script>
   <script src="scripts/utils.js"></script>
   <script src="scripts/screen.js"></script>

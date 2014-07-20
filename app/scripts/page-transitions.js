@@ -15,7 +15,7 @@ var PageTransitions = (function() {
     $iterate = $('#iterateEffects'),
     animcursor = 1,
     pagesCount = $pages.length,
-    current = 0,
+    current = '',
     isAnimating = false,
     endCurrPage = false,
     endNextPage = false,
@@ -37,12 +37,13 @@ var PageTransitions = (function() {
       $page.data('originalClassList', $page.attr('class'));
     });
 
-    $pages.eq(current).addClass('pt-page-current');
+    $('div[data-first-page]').addClass('pt-page-current');
+    current = $('div[data-first-page]').attr('id');
 
     $('.btn-next').on('click', function(ev) {
       ev.preventDefault();
       switchPage({
-        showPage: 4,
+        showPage: 'options-screen',
         animation: TransitionTypes.transitionIn
       });
     });
@@ -50,7 +51,7 @@ var PageTransitions = (function() {
     $('.btn-previous').on('click', function(ev) {
       ev.preventDefault();
       switchPage({
-        showPage: 2,
+        showPage: 'game-menu',
         animation: TransitionTypes.transitionOut
       });
     });
@@ -66,24 +67,14 @@ var PageTransitions = (function() {
 
     isAnimating = true;
 
-    var $currPage = $pages.eq(current);
+    var $currPage = $('#' + current);
     $currPage.trigger(TransitionEvents.transitionStart);
 
     if (options.showPage) {
-      if (options.showPage < pagesCount - 1) {
-        current = options.showPage;
-      } else {
-        current = 0;
-      }
-    } else {
-      if (current < pagesCount - 1) {
-        ++current;
-      } else {
-        current = 0;
-      }
+      current = options.showPage;
     }
 
-    var $nextPage = $pages.eq(current).addClass('pt-page-current'),
+    var $nextPage = $('#' + current).addClass('pt-page-current'),
       outClass = '',
       inClass = '';
 
@@ -130,10 +121,12 @@ var PageTransitions = (function() {
 
   function resetPage($outpage, $inpage) {
     $outpage.attr('class', $outpage.data('originalClassList'));
-    $inpage.attr('class', $inpage.data('originalClassList') + ' pt-page-current');
+    $inpage.attr('class', $inpage.data('originalClassList') + 'pt-page-current');
   }
 
-  init();
+  $(function() {
+    init();
+  });
 
   return {
     init: init,
