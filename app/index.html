@@ -19,8 +19,16 @@
 </head>
 <body>
 
-  <div class="overlay"></div>
+  <div class="overlay spinner">
+    <div class="bounce1"></div>
+    <div class="bounce2"></div>
+    <div class="bounce3"></div>
+  </div>
 
+<!--   <div class="overlay">
+    <img src="images/loading_icon.gif" class="loading-icon">
+  </div>
+ -->
   <div id="pt-main" class="pt-perspective">
 
     <div class="pt-page" id="game-menu" data-first-page>
@@ -57,8 +65,10 @@
     </div>
 
     <div class="pt-page" id="network-game-lobby">
+      <h3>Player count</h3>
       <div class="player-count"></div>
       <div class="network-game-description"></div>
+      <h3>Room code</h3>
       <div class="room-code"> </div>
       <div class="button game-start-button">Start game</div>
       <div class="button game-will-start-soon"> The game will start soon ... </div>
