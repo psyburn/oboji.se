@@ -124,7 +124,6 @@ $.extend(gameScreen, {
     Utils.switchScreen(optionsScreen);
   },
 
-
   onGameStart: function() {
     Core.colorChanger.setElement(this.$('.color1'));
     this.startGameTimer();
@@ -162,7 +161,6 @@ $.extend(gameScreen, {
     me.setStartColor(startColor);
     me.setTargetColor(targetColor);
     me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
-
       setTimeout(function() {
         me.hideTopbar();
         me.shrinkTargetColor();
