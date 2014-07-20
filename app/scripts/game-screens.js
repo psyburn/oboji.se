@@ -9,6 +9,14 @@ var room;
 
 var startColor, targetColor;
 
+var startNextGame = function() {
+  if (room.isManager()) {
+    startColor = Core.Color.generateRandomRgbString();
+    targetColor = Core.Color.generateRandomRgbString();
+    room.startNextGame(startColor, targetColor);
+  }
+};
+
 
 /* Game menu screen */
 var gameMenuScreen = new Screen({
@@ -347,11 +355,7 @@ $.extend(gameScreen, {
     room.on('game:finish', this.onGameFinish, this);
     room.on('game:changed', this.onGameChange, this);
 
-    if (room.isManager()) {
-      startColor = Core.Color.generateRandomRgbString();
-      targetColor = Core.Color.generateRandomRgbString();
-      room.startNextGame(startColor, targetColor);
-    }
+    startNextGame();
 
     var me = this;
     me.setStartColor(startColor);
@@ -373,7 +377,10 @@ $.extend(gameScreen, {
   },
 
   onGameNext: function() {
-    console.log('next');
+    if (room.isManager()) {
+      Utils.switchScreen(gameScreen);
+      // gameScreen.startGame();
+    }
   },
 
   onGameDone: function() {
@@ -455,11 +462,14 @@ _.extend(resultsScreen, {
       this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
     }
   },
+
   onScreenShown: function() {
     var board = room.getLeaderboard();
     this.setWinningMessage(true);
     this.setData(board);
+    setTimeout(startNextGame, 5000);
   },
+
   setData: function(data) {
     var playersList = $('<ul>').addClass('scores');
     var playerItem;
