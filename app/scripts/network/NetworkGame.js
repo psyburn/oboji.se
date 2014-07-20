@@ -7,6 +7,12 @@ NetworkGame = function(player) {
 
   var publicRoomList = new Firebase(rootPath + 'public-rooms');
   var remoteRooms = new Firebase(rootPath + 'rooms');
+  var offsetRef = new Firebase(rootPath + '.info/serverTimeOffset');
+
+  var timeOffset;
+  offsetRef.on('value', function(snap) {
+    timeOffset = snap.val();
+  });
 
   var keyChars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
@@ -17,11 +23,17 @@ NetworkGame = function(player) {
     publicRooms.push(snapshot.val());
   });
 
+  function getServerTime() {
+    return new Date().getTime() + timeOffset;
+  }
+
   function createRoom(options) {
     options.roomCode = generateKey();
-    options.created = options.lastActive = +new Date();
+    options.created = options.lastActive = getServerTime();
     options.manager = player;
     options.players = [player];
+    options.scores = [];
+    options.games = [];
     if (options.public) {
       publicRoomList.push({
         roomCode: options.roomCode,
@@ -33,14 +45,14 @@ NetworkGame = function(player) {
     if (activeRoom) {
       activeRoom.leaveRoom();
     }
-    activeRoom = new GameRoom(remoteRooms, options, true);
+    activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + options.roomCode), options, player, true, this);
     return activeRoom;
   }
 
   function getPublicRooms(cb) {
     var availablePublicRooms = [];
     var publicRoomsInfo = [];
-    var lastActiveLimit = (+new Date()) - 5 * 60 * 1000;
+    var lastActiveLimit = getServerTime() - 5 * 60 * 1000;
     for (var i = 0; i < publicRooms.length; i++) {
       if (publicRooms.lastActive > lastActiveLimit) {
         availablePublicRooms.push(publicRooms.roomCode);
@@ -71,7 +83,7 @@ NetworkGame = function(player) {
         if (activeRoom) {
           activeRoom.leaveRoom();
         }
-        activeRoom = new GameRoom(remoteRooms, room, false);
+        activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + roomCode), room, player, false, this);
         cb(activeRoom);
       });
     }
@@ -94,6 +106,7 @@ NetworkGame = function(player) {
   }
 
   return {
+    getServerTime: getServerTime,
     createRoom: createRoom,
     getPublicRooms: getPublicRooms,
     joinRoom: joinRoom
