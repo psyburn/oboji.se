@@ -7,5 +7,10 @@ var Utils = {
       }
     });
     PageTransitions.goToScreen(nextScreen);
+  },
+
+  toggleLoadingScreen: function() {
+    console.log('toggle');
+    $('.overlay').toggle();
   }
 };
