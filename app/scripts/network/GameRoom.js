@@ -13,17 +13,17 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   function trigger(eventName) {
     listeners[eventName] = listeners[eventName] || [];
     var args = _.toArray(arguments).slice(1);
-    for (var i = 0; i < listeners[eventName]; i++) {
+    for (var i = 0; i < listeners[eventName].length; i++) {
       listeners[eventName][i].cb.apply(listeners[eventName][i].scope, args);
     }
   }
 
   on('game:next', function() {
     scoreExpected = true;
-  });
+  }, this);
   on('game:done', function() {
     scoreExpected = false;
-  });
+  }, this);
 
   remoteRoom.on('value', _.bind(function(snapshot) {
     var newInfo = snapshot.val() || {};

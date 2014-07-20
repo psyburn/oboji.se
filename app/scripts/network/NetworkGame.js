@@ -3,7 +3,7 @@
 NetworkGame = function(player) {
   'use strict';
 
-  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  var keyChars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'.split('');
   function generateKey() {
     var key = '';
     for (var i = 0; i < 5; i++) {
