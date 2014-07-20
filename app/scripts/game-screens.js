@@ -348,11 +348,11 @@ $.extend(gameScreen, {
   },
 
   onGameEnd: function() {
-
+    console.log('end');
   },
 
   onGameNext: function() {
-    // Show game scree
+    console.log('next');
   },
 
   onGameDone: function() {
@@ -362,7 +362,7 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
-    alert('fiinhs');
+    alert('Finish');
     // room.getLeaderboard();
   },
 
