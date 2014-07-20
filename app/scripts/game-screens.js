@@ -132,7 +132,4 @@ networkGameMenu.init();
 networkGameLobbyScreen.init();
 gameScreen.init();
 networkGameLobbyScreen.init();
-var networkGameMenuScreen;
-
-var gameScreen;
 
