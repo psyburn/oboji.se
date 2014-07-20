@@ -26,23 +26,26 @@ _.extend(gameMenuScreen, {
   },
 
   onRandomNetworkGameClick: function() {
-    networkGame = new NetworkGame({
-      name: localStorage.getItem('username')
-    });
+    // networkGame = new NetworkGame({
+    //   name: localStorage.getItem('username')
+    // });
 
-    networkGame.getPublicRooms(function(publicRooms) {
-      if (publicRooms.length === 0) {
-        Utils.switchScreen(gameMenuScreen);
-        return alert('Nema igra');
-      }
-      // Show loading screen
-      var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
+    // networkGame.getPublicRooms(function(publicRooms) {
+    //   if (publicRooms.length === 0) {
+    //     Utils.switchScreen(gameMenuScreen);
+    //     return alert('Nema igra');
+    //   }
+    //   // Show loading screen
+    //   var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
 
-      roomInfo.joinRoom(roomInfo.roomCode, function(room) {
-        Utils.switchScreen(gameScreen);
-        gameScreen.setRoom(room);
-      });
-    });
+    //   roomInfo.joinRoom(roomInfo.roomCode, function(room) {
+    //     Utils.switchScreen(gameScreen);
+    //     gameScreen.setRoom(room);
+    //   });
+    // });
+
+    Utils.switchScreen(gameScreen);
+    gameScreen.startGame(1, 'green', 'chocolate', 10);
   },
 
   onOptionsClick: function() {
@@ -238,16 +241,22 @@ $.extend(gameScreen, {
 
   startGame: function(room, startColor, targetColor, time) {
     var me = this;
-    me.setStartColor(startColor);
-    me.setTargetColor(targetColor);
-    me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
-      setTimeout(function() {
-        me.hideTopbar();
-        me.shrinkTargetColor();
-        me.$el.trigger('game-start-animation-finished');
+    window.$game = this.$el;
 
-        me.onGameStart();
-      }, 2500);
+    me.$el.on('showStartColor', function() {
+      me.setStartColor(startColor);
+    });
+
+    me.$el.on('showTargetColor', function() {
+      me.showTargetColor(targetColor);
+    });
+
+    me.$el.on('showGameScreen', function() {
+      me.setTargetColor(startColor);
+      me.hideTopbar();
+      me.shrinkTargetColor();
+      me.$el.trigger('game-start-animation-finished');
+      me.onGameStart();
     });
   },
 
@@ -309,6 +318,12 @@ $.extend(gameScreen, {
   setStartColor: function(startColor) {
     $('.color1').css({
       backgroundColor: startColor
+    });
+  },
+
+  showTargetColor: function(target) {
+    $('.color1').css({
+      backgroundColor: target
     });
   },
 
