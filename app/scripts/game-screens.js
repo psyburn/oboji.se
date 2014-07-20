@@ -264,6 +264,10 @@ $.extend(gameScreen, {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
 
+  onScreenShown: function() {
+    this.setColors();
+  },
+
   init: function() {
     this.setListeners();
     this.setTopbarText(this.startRules);
@@ -354,10 +358,9 @@ $.extend(gameScreen, {
     room.on('game:changed', this.onGameChange, this);
 
     startNextGame();
+    this.setColors();
 
     var me = this;
-    me.setStartColor(startColor);
-    me.setTargetColor(targetColor);
 
     me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
       setTimeout(function() {
@@ -368,6 +371,11 @@ $.extend(gameScreen, {
         me.startGameTimer();
       }, 2500);
     });
+  },
+
+  setColors: function() {
+    this.setStartColor(startColor);
+    this.setTargetColor(targetColor);
   },
 
   onGameEnd: function() {
