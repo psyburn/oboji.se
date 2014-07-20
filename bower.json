@@ -7,7 +7,8 @@
     "lodash": "~2.4.1",
     "modernizr": "~2.8.3",
     "normalize-css": "~3.0.1",
-    "css-toggle-switch": "~2.1.6"
+    "css-toggle-switch": "~2.1.6",
+    "topcoat": "~0.8.0"
   },
   "devDependencies": {}
 }

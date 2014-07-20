@@ -2,8 +2,8 @@ $default-button-color: red;
 $default-screen-background: white;
 
 .button {
-  height: 45px;
-  line-height: 45px;
+  height: 55px;
+  line-height: 55px;
   width: 100%;
   display: inline-block;
   padding: 8px 12px;
@@ -13,15 +13,25 @@ $default-screen-background: white;
   white-space: nowrap;
   text-transform: uppercase;
   text-align: center;
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid #C5C5C5;
+  color: rgb(10, 20, 136);
 }
 
 .switch-candy {
   border-radius: 0;
+  height: 45px;
 }
 
 .input-field {
   width: 100%;
+  height: 55px;
+  text-align: center;
+}
+
+.flat {
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
 }
 
 .overlay {
@@ -32,4 +42,13 @@ $default-screen-background: white;
   width: 100%;
   height: 100%;
   z-index: 5;
+}
+
+.label {
+  padding-top: 6px;
+}
+
+
+.switch-toggle input + label {
+ padding-top: 6px;
 }

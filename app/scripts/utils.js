@@ -10,7 +10,6 @@ var Utils = {
   },
 
   toggleLoadingScreen: function() {
-    console.log('toggle');
     $('.overlay').toggle();
   }
 };

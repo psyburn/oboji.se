@@ -1,13 +1,19 @@
 /*global Screen, Core, Utils, _*/
 'use strict';
 
-var networkGame;
+var networkGame = new NetworkGame({
+  name: localStorage.getItem('username')
+});
+
+var room;
+
+var startColor, targetColor;
+
 
 /* Game menu screen */
 var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
-
 
 _.extend(gameMenuScreen, {
   setListeners: function() {
@@ -26,26 +32,19 @@ _.extend(gameMenuScreen, {
   },
 
   onRandomNetworkGameClick: function() {
-    // networkGame = new NetworkGame({
-    //   name: localStorage.getItem('username')
-    // });
+    networkGame.getPublicRooms(function(publicRooms) {
+      if (publicRooms.length === 0) {
+        Utils.switchScreen(gameMenuScreen);
+        return alert('Nema igra');
+      }
+      // Show loading screen
+      var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
 
-    // networkGame.getPublicRooms(function(publicRooms) {
-    //   if (publicRooms.length === 0) {
-    //     Utils.switchScreen(gameMenuScreen);
-    //     return alert('Nema igra');
-    //   }
-    //   // Show loading screen
-    //   var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
-
-    //   roomInfo.joinRoom(roomInfo.roomCode, function(room) {
-    //     Utils.switchScreen(gameScreen);
-    //     gameScreen.setRoom(room);
-    //   });
-    // });
-
-    Utils.switchScreen(gameScreen);
-    gameScreen.startGame(1, 'green', 'chocolate', 10);
+      roomInfo.joinRoom(roomInfo.roomCode, function(room) {
+        Utils.switchScreen(gameScreen);
+        gameScreen.startGame();
+      });
+    });
   },
 
   onOptionsClick: function() {
@@ -98,11 +97,46 @@ var networkGameLobbyScreen = new Screen({
 
 _.extend(networkGameLobbyScreen, {
   setListeners: function() {
-    this.$el.find('.game-start-button').on('click', this.onStartGameClick);
+    var me = this;
+    this.$el.find('.game-start-button').on('click', function() {
+      me.onStartGameClick.call(me);
+    });
+  },
+
+  onScreenShown: function() {
+    room.on('game:changed', this.updateTexts, this);
+    room.on('game:next', this.onRoomGameNext, this);
+    this.updateTexts();
+  },
+
+  onRoomGameNext: function(inStartColor, inTargetColor) {
+    startColor = inStartColor;
+    targetColor = inTargetColor;
+    if (!room.isManager()) {
+      this.joinGame();
+    }
   },
 
   onStartGameClick: function() {
+    this.joinGame();
+  },
 
+  joinGame: function() {
+    Utils.switchScreen(gameScreen);
+    gameScreen.startGame();
+  },
+
+  updateTexts: function() {
+    this.$('.room-code').text(room.getRoomCode());
+    this.$('.player-count').text(_.values(room.get('players')).length);
+
+    if (!room.isManager()) {
+      this.$('.game-start-button').hide();
+      this.$('.game-will-start-soon').show();
+    } else {
+      this.$('.game-start-button').show();
+      this.$('.game-will-start-soon').hide();
+    }
   },
 
   setPlayerCount: function(playerCount) {
@@ -125,16 +159,22 @@ var networkGameMenu = new Screen({
 
 _.extend(networkGameMenu, {
   setListeners: function() {
-    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onCreateGameClick, this));
     this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
   },
 
   getGameCodeValue: function() {
     return this.$el.find('.game-code-input').val();
   },
-  onGameStarClick: function() {
-    console.log('clicked game start');
+
+  onCreateGameClick: function() {
+    room = networkGame.createRoom({
+      'public': this.gameType === 'public',
+      maxPlayers: 100
+    });
+    Utils.switchScreen(networkGameLobbyScreen);
   },
+
   onGameTypeChage: function() {
     this.gameType = 'public';
     if (this.$el.find('input:checked').val() === 'private') {
@@ -158,16 +198,21 @@ var joinNetworkGameMenu = new Screen({
 
 _.extend(joinNetworkGameMenu, {
   setListeners: function() {
-    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
+    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStartClick, this));
     this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
   },
 
   getGameCodeValue: function() {
     return this.$el.find('.game-code-input').val();
   },
-  onGameStarClick: function() {
-    console.log('clicked game start');
+
+  onGameStartClick: function() {
+    networkGame.joinRoom(this.getGameCodeValue(), function(inRoom) {
+      room = inRoom;
+      Utils.switchScreen(networkGameLobbyScreen);
+    });
   },
+
   onGameTypeChage: function() {
     this.gameType = 'public';
     if (this.$el.find('input:checked').val() === 'private') {
@@ -192,6 +237,9 @@ var gameScreen = window.gameScreen = new Screen({
 });
 
 $.extend(gameScreen, {
+  startRules: 'This is your starting color color<br> Change it by moving you mobile left, right, up, down, forward, back',
+  targetRules: 'This is your target color. Match the starting color with the target color. Good luck.',
+
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
@@ -204,11 +252,6 @@ $.extend(gameScreen, {
 
   onNetworkGameClick: function() {
     Utils.switchScreen(optionsScreen);
-  },
-
-  onGameStart: function() {
-    Core.colorChanger.setElement(this.$('.color2'));
-    this.startGameTimer();
   },
 
   startGameTimer: function() {
@@ -235,47 +278,63 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
-    this.onGameEnd();
-    // this.$currentColorOverlay
+    room.addScore(100);
   },
 
-  startGame: function(room, startColor, targetColor, time) {
-    var me = this;
-    window.$game = this.$el;
+  startGame: function() {
+    // =======
+    //   startGame: function(room, startColor, targetColor, time) {
+    //     var me = this;
+    //     window.$game = this.$el;
 
-    me.$el.on('showStartColor', function() {
-      me.setStartColor(startColor);
-    });
+    //     me.$el.on('showStartColor', function() {
+    //       me.setStartColor(startColor);
+    //     });
 
-    me.$el.on('showTargetColor', function() {
-      me.showTargetColor(targetColor);
-    });
+    //     me.$el.on('showTargetColor', function() {
+    //       me.showTargetColor(targetColor);
+    //     });
 
-    me.$el.on('showGameScreen', function() {
-      me.setTargetColor(startColor);
-      me.hideTopbar();
-      me.shrinkTargetColor();
-      me.$el.trigger('game-start-animation-finished');
-      me.onGameStart();
-    });
-  },
+    //     me.$el.on('showGameScreen', function() {
+    //       me.setTargetColor(startColor);
+    //       me.hideTopbar();
+    //       me.shrinkTargetColor();
+    //       me.$el.trigger('game-start-animation-finished');
+    //       me.onGameStart();
+    //     });
+    //   },
 
-  setRoom: function(room) {
     if (room) {
       room.off('game:next', this.onGameNext, this);
       room.off('game:done', this.onGameDone, this);
       room.off('game:finish', this.onGameFinish, this);
       room.off('game:changed', this.onGameChange, this);
     }
-    this.room = room;
+
     room.on('game:next', this.onGameNext, this);
     room.on('game:done', this.onGameDone, this);
     room.on('game:finish', this.onGameFinish, this);
     room.on('game:changed', this.onGameChange, this);
 
     if (room.isManager()) {
-      this.startGame();
+      startColor = 'red';
+      targetColor = 'green';
+      room.startNextGame(startColor, targetColor);
     }
+
+    var me = this;
+    me.setStartColor(startColor);
+    me.setTargetColor(targetColor);
+
+    me.$el.on(PageTransitions.TransitionEvents.transitionEnd, function() {
+      setTimeout(function() {
+        me.hideTopbar();
+        me.shrinkTargetColor();
+
+        Core.colorChanger.setElement(me.$('.color2'));
+        me.startGameTimer();
+      }, 2500);
+    });
   },
 
   onGameEnd: function() {
@@ -283,15 +342,18 @@ $.extend(gameScreen, {
   },
 
   onGameNext: function() {
-    // Show game screen
+    // Show game scree
   },
 
   onGameDone: function() {
-
+    if (room.isManager()) {
+      room.finishGame();
+    }
   },
 
   onGameFinish: function() {
-
+    alert('fiinhs');
+    // room.getLeaderboard();
   },
 
   onGameChange: function() {
