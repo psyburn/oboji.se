@@ -5,14 +5,23 @@ window.Core = window.Core || {};
 Core.motion = (function() {
   'use strict';
 
-  var ABS_DELTA_TRESHOLD = 2;
-  var MOTION_MAX_FORCE = 10;
+  var ABS_DELTA_TRESHOLD = 4;
+  var ABS_ROTATION_TRESHOLD = 3;
+  var MOTION_MAX_FORCE = 20;
+  var MOTION_MAX_DELTA = 15;
+  var ROTATION_MAX = 5;
+  var ACCELERATION_INACTIVE_TIMEOUT = 500;
+  var ROTATION_INACTIVE_TIMEOUT = 500;
 
   var AccelerationDimenState = {
     INACTIVE: 0,
     PROGRESSING: 1,
     DEGRESSING: 2
   };
+
+  function normalize(val, constant) {
+    return val < 0 ? (val < -constant ? -constant : val) : (val > constant ? constant : val);
+  }
 
   function AccelerationDimen(name) {
     this.name = name;
@@ -26,22 +35,22 @@ Core.motion = (function() {
 
   _.extend(AccelerationDimen.prototype, {
     update: function(val) {
-      val = this.normalizeMotionForceValue(val);
+      val = normalize(val, MOTION_MAX_FORCE);
       this.lastLast = this.last;
       this.last = this.val;
       this.val = val;
-      this.delta = this.val - this.last;
+      this.delta = normalize(this.val - this.last, MOTION_MAX_DELTA);
       this.lastAbsDelta = this.absDelta;
       this.absDelta = Math.abs(this.delta);
 
-      if (this.absDelta >= ABS_DELTA_TRESHOLD) {
+      if (this.absDelta >= ABS_DELTA_TRESHOLD && !this.inactiveTimout) {
         if (this.state === AccelerationDimenState.INACTIVE) {
           if (this.isProgressingInDirection()) {
             this.setProgressing();
           }
         } else if (this.state === AccelerationDimenState.PROGRESSING) {
           if (this.isProgressingInDirection()) {
-            this.progressingMax = this.val;
+            this.progressingMax = this.delta;
           } else {
             this.setDegressing();
           }
@@ -53,10 +62,6 @@ Core.motion = (function() {
           }
         }
       }
-    },
-
-    normalizeMotionForceValue: function(val) {
-      return val < 0 ? (val < -MOTION_MAX_FORCE ? -MOTION_MAX_FORCE : val) : (val > MOTION_MAX_FORCE ? MOTION_MAX_FORCE : val);
     },
 
     isProgressingInDirection: function() {
@@ -79,6 +84,11 @@ Core.motion = (function() {
       // console.log('inactive');
       this.state = AccelerationDimenState.INACTIVE;
       this.progressingMax = 0;
+      var me = this;
+      this.inactiveTimout = window.setTimeout(function() {
+        window.clearTimeout(me.inactiveTimout);
+        me.inactiveTimout = undefined;
+      }, ACCELERATION_INACTIVE_TIMEOUT);
     }
   });
 
@@ -89,14 +99,20 @@ Core.motion = (function() {
 
   _.extend(RotationDimen.prototype, {
     update: function(val) {
+      var me = this;
       val = parseInt(val);
       this.lastVal = this.val;
       this.val = val;
-      this.delta = val - this.lastVal;
+      this.delta = normalize(val - this.lastVal, ROTATION_MAX);
       this.absDelta = Math.abs(this.delta);
 
-      if (this.absDelta > 2) {
+      if (this.absDelta > ABS_ROTATION_TRESHOLD && !this.inactiveTimout) {
         triggerRotation();
+        console.log(this.name, ' is rotated for ', this.delta);
+        me.inactiveTimout = window.setTimeout(function() {
+          window.clearTimeout(me.inactiveTimout);
+          me.inactiveTimout = undefined;
+        }, ROTATION_INACTIVE_TIMEOUT);
       }
     }
   });

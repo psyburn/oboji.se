@@ -17,7 +17,7 @@
     };
 
     var rotationOffsetToColorOffset = function(val) {
-      return parseInt(val * 3);
+      return parseInt(val * 5);
     };
 
     var getEl = function() {
@@ -61,4 +61,6 @@
       getEl: getEl
     };
   })();
+
+  Core.colorChanger.setElement($('body'));
 })();
