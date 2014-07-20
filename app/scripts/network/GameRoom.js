@@ -154,6 +154,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     set: set,
     addScore: addScore,
     startNextGame: manager ? startNextGame : undefined,
-    getRoomCode: getRoomCode
+    getRoomCode: getRoomCode,
+    save: saveRoom
   };
 };
