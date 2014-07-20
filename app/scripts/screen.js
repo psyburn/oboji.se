@@ -19,3 +19,6 @@ _.extend(Screen.prototype, {
     // listeners
   }
 });
+
+$(window).on('loading', Utils.toggleLoadingScreen);
+Utils.toggleLoadingScreen();
