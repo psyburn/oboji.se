@@ -86,6 +86,7 @@
   };
 
   function update() {
+    debugger;
     d.x.update(event.acceleration.x);
     d.y.update(event.acceleration.y);
     d.z.update(event.acceleration.z);
