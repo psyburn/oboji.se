@@ -157,7 +157,7 @@ $.extend(gameScreen, {
   },
 
   onGameStart: function() {
-    Core.colorChanger.setElement(this.$('.color1'));
+    Core.colorChanger.setElement(this.$('.color2'));
     this.startGameTimer();
   },
 
