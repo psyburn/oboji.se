@@ -96,7 +96,6 @@ var networkGameLobbyScreen = new Screen({
 });
 
 _.extend(networkGameLobbyScreen, {
-
   setListeners: function() {
     var me = this;
     this.$el.find('.game-start-button').on('click', function() {
@@ -105,7 +104,7 @@ _.extend(networkGameLobbyScreen, {
   },
 
   onScreenShown: function() {
-    room.on('game:change', this.updateTexts, this);
+    room.on('game:changed', this.updateTexts, this);
     room.on('game:next', this.onRoomGameNext, this);
     this.updateTexts();
   },
@@ -138,7 +137,6 @@ _.extend(networkGameLobbyScreen, {
       this.$('.game-start-button').show();
       this.$('.game-will-start-soon').hide();
     }
-
   },
 
   setPlayerCount: function(playerCount) {
@@ -344,7 +342,7 @@ $.extend(gameScreen, {
   },
 
   onGameNext: function() {
-    // Show game screen
+    // Show game scree
   },
 
   onGameDone: function() {
@@ -358,13 +356,13 @@ $.extend(gameScreen, {
     // room.getLeaderboard();
   },
 
-  // onGameChange: function() {
-  //   if (this.room.isManager()) {
+  onGameChange: function() {
+    if (this.room.isManager()) {
 
-  //   } else {
+    } else {
 
-  //   }
-  // },
+    }
+  },
 
 
   shrinkTargetColor: function() {
