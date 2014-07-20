@@ -9,6 +9,14 @@ var room;
 
 var startColor, targetColor;
 
+var startNextGame = function() {
+  if (room.isManager()) {
+    startColor = Core.Color.generateRandomRgbString();
+    targetColor = Core.Color.generateRandomRgbString();
+    room.startNextGame(startColor, targetColor);
+  }
+};
+
 
 /* Game menu screen */
 var gameMenuScreen = new Screen({
@@ -290,7 +298,24 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
-    room.addScore(100);
+
+    var targetColor = this.$('.color2');
+    var startColor = this.$('.color1');
+
+    var targetRGB = targetColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+    var startRGB = startColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+
+    var delta = function(old, newVal) {
+      return Math.abs(old - newVal);
+    };
+
+    var score = delta(targetRGB[0], startRGB[0]) + delta(targetRGB[1], startRGB[1]) + delta(targetRGB[2], startRGB[2]);
+
+    room.addScore(256 * 3 - score);
   },
 
   startGame: function() {
@@ -328,11 +353,7 @@ $.extend(gameScreen, {
     room.on('game:finish', this.onGameFinish, this);
     room.on('game:changed', this.onGameChange, this);
 
-    if (room.isManager()) {
-      startColor = 'red';
-      targetColor = 'green';
-      room.startNextGame(startColor, targetColor);
-    }
+    startNextGame();
 
     var me = this;
     me.setStartColor(startColor);
@@ -354,7 +375,10 @@ $.extend(gameScreen, {
   },
 
   onGameNext: function() {
-    console.log('next');
+    if (room.isManager()) {
+      Utils.switchScreen(gameScreen);
+      // gameScreen.startGame();
+    }
   },
 
   onGameDone: function() {
@@ -436,12 +460,16 @@ _.extend(resultsScreen, {
       this.$el.find('.winning-message').html('Awwww, ' + username + ', you didn\'t win :( :(<br />Try your luck in the next round');
     }
   },
+
   onScreenShown: function() {
     var board = room.getLeaderboard();
     this.setData(board);
     var myPlayer = room.getPlayer();
     this.setWinningMessage(board[0].player.id === myPlayer.id);
+
+    setTimeout(startNextGame, 5000);
   },
+
   setData: function(data) {
     var playersList = $('<ul>').addClass('scores');
     var playerItem;
