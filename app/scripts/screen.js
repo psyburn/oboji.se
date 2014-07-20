@@ -8,14 +8,14 @@ var Screen = function(options) {
   this._init(options);
 };
 
-_.extend(Screen.prototype, {
+$.extend(Screen.prototype, {
   _init: function(options) {
     this.$el = $('#' + options.id);
   },
   init: function(options) {
-    //game logic
+    // game logic
   }
-}
+});
 
 var Utils = {
   switchScreen: function(currentScreen, nextScreen) {
