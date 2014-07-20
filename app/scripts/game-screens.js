@@ -5,20 +5,27 @@ var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
 
+
+
 _.extend(gameMenuScreen, {
   setListeners: function() {
     this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
+    this.$el.find('.options-button').on('click', this.onOptionsClick);
     this.$el.find('.network-game-random-start-button').on('click', this.onRandomNetworkGameClick);
   },
 
   onNetworkGameClick: function() {
-    Utils.switchScreen(optionsScreen);
+    Utils.switchScreen(networkGameMenu);
   },
 
   onRandomNetworkGameClick: function() {
     Utils.switchScreen(gameScreen);
     gameScreen.startGame('peru', 'chocolate', 10);
-  }
+  },
+
+  onOptionsClick: function() {
+    Utils.switchScreen(optionsScreen);
+  },
 });
 
 gameMenuScreen.init();
@@ -62,8 +69,6 @@ _.extend(optionsScreen, {
   }
 });
 
-
-
 _.extend(networkGameLobbyScreen, {
   setListeners: function() {
     this.$el.find('.game-start-button').on('click', this.onStartGameClick);
@@ -79,6 +84,11 @@ _.extend(networkGameLobbyScreen, {
 
   setDescription: function(description) {
     this.$el.find('.network-game-description').html(description);
+  },
+
+
+  onScreenShown: function() {
+
   }
 });
 
@@ -199,14 +209,6 @@ $.extend(gameScreen, {
     $('.color2').css({
       backgroundColor: targetColor
     });
-  },
-
-  setDescription: function(description) {
-    this.$el.find('.network-game-description').html(description);
-  },
-
-  onScreenShown: function() {
-    this.setDescription('test');
   }
 });
 
