@@ -1,19 +1,22 @@
-/*globals _*/
-(function() {
+/*globals _, Core*/
+
+window.Core = window.Core || {};
+
+Core.motion = (function() {
   'use strict';
 
   var ABS_DELTA_TRESHOLD = 2;
   var MOTION_MAX_FORCE = 10;
 
-  var DimenState = {
+  var AccelerationDimenState = {
     INACTIVE: 0,
     PROGRESSING: 1,
     DEGRESSING: 2
   };
 
-  function Dimen(name) {
+  function AccelerationDimen(name) {
     this.name = name;
-    this.state = DimenState.INACTIVE;
+    this.state = AccelerationDimenState.INACTIVE;
     this.val = 0;
     this.last = 0;
     this.lastLast = 0;
@@ -21,7 +24,7 @@
     this.absDelta = 0;
   }
 
-  _.extend(Dimen.prototype, {
+  _.extend(AccelerationDimen.prototype, {
     update: function(val) {
       val = this.normalizeMotionForceValue(val);
       this.lastLast = this.last;
@@ -32,20 +35,20 @@
       this.absDelta = Math.abs(this.delta);
 
       if (this.absDelta >= ABS_DELTA_TRESHOLD) {
-        if (this.state === DimenState.INACTIVE) {
+        if (this.state === AccelerationDimenState.INACTIVE) {
           if (this.isProgressingInDirection()) {
             this.setProgressing();
           }
-        } else if (this.state === DimenState.PROGRESSING) {
+        } else if (this.state === AccelerationDimenState.PROGRESSING) {
           if (this.isProgressingInDirection()) {
             this.progressingMax = this.val;
           } else {
             this.setDegressing();
           }
-        } else if (this.state === DimenState.DEGRESSING) {
+        } else if (this.state === AccelerationDimenState.DEGRESSING) {
           if (!this.isProgressingInDirection()) {
             console.log(this.name, ' dimension is moved ' + this.progressingMax);
-            triggerOffsetClb();
+            triggerAcceleration();
             this.setInactive();
           }
         }
@@ -63,49 +66,63 @@
 
     setProgressing: function() {
       // console.log('progressing');
-      this.state = DimenState.PROGRESSING;
+      this.state = AccelerationDimenState.PROGRESSING;
       this.progressingMax = this.val;
     },
 
     setDegressing: function() {
       // console.log('degressing');
-      this.state = DimenState.DEGRESSING;
+      this.state = AccelerationDimenState.DEGRESSING;
     },
 
     setInactive: function() {
       // console.log('inactive');
-      this.state = DimenState.INACTIVE;
+      this.state = AccelerationDimenState.INACTIVE;
       this.progressingMax = 0;
     }
   });
 
-  var d = {
-    x: new Dimen('x'),
-    y: new Dimen('y'),
-    z: new Dimen('z')
+  var ad = {
+    x: new AccelerationDimen('x'),
+    y: new AccelerationDimen('y'),
+    z: new AccelerationDimen('z')
   };
 
   function update() {
-    debugger;
-    d.x.update(event.acceleration.x);
-    d.y.update(event.acceleration.y);
-    d.z.update(event.acceleration.z);
+    ad.x.update(event.acceleration.x);
+    ad.y.update(event.acceleration.y);
+    ad.z.update(event.acceleration.z);
   }
 
-  function triggerOffsetClb() {
-    offsetClb(d.x.progressingMax, d.y.progressingMax, d.z.progressingMax);
+  function triggerAcceleration() {
+    accelerationClb(ad.x.progressingMax, ad.y.progressingMax, ad.z.progressingMax);
   }
 
-  function registerForOffset(clb) {
-    offsetClb = clb;
+  function triggerRotation() {
+    rotationClb();
   }
 
-  var offsetClb = function(x, y, z) {
+  function registerForAcceleration(clb) {
+    accelerationClb = clb;
+  }
+
+  function registerForRotation(clb) {
+    rotationClb = clb;
+  }
+
+  var accelerationClb = function(x, y, z) {
     console.log('offset', x, y, z);
+  };
+
+  var rotationClb = function(a, b, g) {
+    console.log('rotation', a, b, g);
   };
 
   $(window).on('devicemotion', update);
 
-  window.registerMotionOffsetCallback = registerForOffset;
-  window.d = d;
-})(_);
+  return {
+    onRotation: registerForRotation,
+    onAcceleration: registerForAcceleration,
+    ad: ad
+  };
+})();
