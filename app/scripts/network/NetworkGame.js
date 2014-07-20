@@ -3,6 +3,15 @@
 NetworkGame = function(player) {
   'use strict';
 
+  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+
+  if (typeof player === 'string') {
+    player = {
+      name: player
+    };
+  }
+  player.id = generateKey() + '-' + (+new Date());
+
   var rootPath = 'https://oboji-se.firebaseio.com/';
 
   var publicRoomList = new Firebase(rootPath + 'public-rooms');
@@ -13,8 +22,6 @@ NetworkGame = function(player) {
   offsetRef.on('value', function(snap) {
     timeOffset = snap.val();
   });
-
-  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   var activeRoom = null;
   var publicRooms = [];
@@ -31,9 +38,10 @@ NetworkGame = function(player) {
     options.roomCode = generateKey();
     options.created = options.lastActive = getServerTime();
     options.manager = player;
-    options.players = [player];
+    options.players = { 0: player };
     options.scores = {};
     options.games = {};
+    options.expectedScores = 0;
     if (options.public) {
       publicRoomList.push({
         roomCode: options.roomCode,
@@ -57,7 +65,7 @@ NetworkGame = function(player) {
       var roomCode = publicRooms.shift();
       if (roomCode) {
         getRoomInfo(roomCode, function(room) {
-          if (room.players.length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
+          if (_.values(room.players || []).length < room.maxPlayers && !room.started && room.lastActive > lastActiveLimit) {
             publicRoomsInfo.push(room);
           }
         });
@@ -77,6 +85,9 @@ NetworkGame = function(player) {
         if (activeRoom) {
           activeRoom.leaveRoom();
         }
+
+        var key = (+new Date()) + '-' + Math.random(); // A very stupid way to do this, but it should work without much logic
+        room.players[key] = player;
         activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + roomCode), room, player, false, this);
         cb(activeRoom);
       });

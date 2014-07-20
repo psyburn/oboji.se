@@ -2,27 +2,19 @@
 
 var Screen = function(options) {
   this._init(options);
-  this.setListeners();
 };
 
 $.extend(Screen.prototype, {
   _init: function(options) {
     this.$el = $('#' + options.id);
   },
+  $: function(sel) {
+    return this.$el.find(sel);
+  },
   init: function(options) {
-    // game logic
+    this.setListeners();
   },
   setListeners: function(options) {
     // listeners
-  }
-});
-
-
-var gameMenu = new Screen({
-  id: 'game-menu',
-  setListeners: function() {
-    this.$el.on('click', function(){
-      // smth
-    })
   }
 });

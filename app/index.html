@@ -19,12 +19,13 @@
   <body>
 
   <div id="pt-main" class="pt-perspective">
+  <!--
     <div class="pt-page" id="game-menu" data-first-page>
       <div class="button network-game-random-start-button">Start Radnom Network Game</div>
       <div class="button network-game-button">Network Game</div>
       <div class="button options-button">Options</div>
     </div>
-<!--
+
     <div class="pt-page" id="options-screen">
     kreso je lijep ko slika
     </div>
@@ -39,18 +40,20 @@
       <div class="player-count"></div>
       <div class="button game-start-button"></div>
     </div>
+-->
+    <div class="pt-page game-screen" id="game-screen" data-first-page>
+      <div class="game-topbar"></div>
+      <div class="color1"></div>
+      <div class="color2"></div>
+    </div>
 
-    <div class="pt-page" id="game-screen">
-      <div class="overlay-current-color"></div>
-      <div class="target-color"></div>
-    </div> -->
   </div>
 
   <!-- build:js scripts/vendor.js -->
   <!-- bower:js -->
   <script src="../bower_components/modernizr/modernizr.js"></script>
   <script src="../bower_components/jquery/dist/jquery.js"></script>
-  <script src="../bower_components/firebase/firebase.js"></script>
+  <script src="../bower_components/firebase/firebase-debug.js"></script>
   <script src="../bower_components/lodash/dist/lodash.compat.js"></script>
   <!-- endbower -->
   <!-- endbuild -->
@@ -66,13 +69,14 @@
   </script> -->
 
   <!-- build:js({app,.tmp}) scripts/main.js -->
-  <<script src="scripts/core/color.js"></script>
-  <<script src="scripts/core/motion.js"></script>
-  <<script src="scripts/core/game.js"></script>
+  <script src="scripts/core/color.js"></script>
+  <script src="scripts/core/motion.js"></script>
+  <script src="scripts/core/game.js"></script>
   <script src="scripts/network/GameRoom.js"></script>
   <script src="scripts/network/NetworkGame.js"></script>
   <script src="scripts/page-transitions.js"></script>
   <script src="scripts/main.js"></script>
+  <script src="scripts/utils.js"></script>
   <script src="scripts/screen.js"></script>
   <!-- endbuild -->
 </body>
