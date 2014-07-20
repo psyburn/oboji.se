@@ -24,7 +24,11 @@ _.extend(gameMenuScreen, {
   },
 
   onNetworkGameClick: function() {
-    Utils.switchScreen(networkGameMenu);
+    room = networkGame.createRoom({
+      'public': false,
+      maxPlayers: 100
+    });
+    Utils.switchScreen(networkGameLobbyScreen);
   },
 
   onJoinNetworkGameClick: function() {
