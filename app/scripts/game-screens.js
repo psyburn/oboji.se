@@ -80,7 +80,6 @@ _.extend(networkGameMenu, {
   },
   onGameStarClick: function() {
     console.log('clicked game start');
-
   },
   onGameTypeChage: function() {
     this.gameType = 'public';
@@ -94,6 +93,7 @@ _.extend(networkGameMenu, {
     }
   }
 });
+
 
 var gameScreen = new Screen({
   id: 'game-screen'
@@ -126,17 +126,12 @@ $.extend(gameScreen, {
   }
 });
 
-
-
 optionsScreen.init();
 gameMenuScreen.init();
 networkGameMenu.init();
 networkGameLobbyScreen.init();
 gameScreen.init();
-
 networkGameLobbyScreen.init();
-
-
 var networkGameMenuScreen;
 
 var gameScreen;
