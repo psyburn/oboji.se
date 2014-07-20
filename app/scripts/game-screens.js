@@ -134,14 +134,7 @@ var gameScreen = window.gameScreen = new Screen({
   id: 'game-screen'
 });
 
-
-
-var gameScreen = new Screen({
-  id: 'game-screen'
-});
-
 $.extend(gameScreen, {
-
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
