@@ -1,13 +1,13 @@
 body {
-  background-color: #079EED;
+  background-color: #777777;
 }
 
 #game-menu {
-  background-color: #EBE38D;
+  background-color: #abe1fd;
 }
 
 #network-game-menu {
-  background-color: #E36E64;
+  background-color: #adddcf;
   .game-code-input {
     display: none;
   }
@@ -23,5 +23,9 @@ body {
 }
 
 #options-screen {
-  background-color: #079EED;
+  background-color: #bfb1d5;
+}
+
+#join-network-game-menu {
+  background-color: #fed1be;
 }
