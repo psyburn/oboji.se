@@ -62,8 +62,7 @@ _.extend(networkGameMenu, {
   },
   onGameTypeChage: function() {
     this.gameType = 'public';
-    var condition = false;
-    if (condition) {
+    if (this.$el.find('input:checked').val() === 'private') {
       this.gameType = 'private';
     }
     if (this.gameType === 'public') {
@@ -73,6 +72,8 @@ _.extend(networkGameMenu, {
     }
   }
 });
+
+networkGameMenu.init();
 
 
 _.extend(networkGameLobbyScreen, {
@@ -96,9 +97,9 @@ _.extend(networkGameLobbyScreen, {
 optionsScreen.init();
 optionsScreen.fillUsername();
 gameMenuScreen.init();
-networkGameLobbyScreen.init();
-networkGameLobbyScreen.setDescription('test');
-networkGameLobbyScreen.setPlayerCount('555');
+// networkGameLobbyScreen.init();
+// networkGameLobbyScreen.setDescription('test');
+// networkGameLobbyScreen.setPlayerCount('555');
 
 
 
