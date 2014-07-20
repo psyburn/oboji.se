@@ -67,11 +67,11 @@ _.extend(networkGameLobbyScreen, {
   },
 
   setPlayerCount: function(playerCount) {
-    this.$el.find('.player-count').get(0).innerHTML = playerCount;
+    this.$el.find('.player-count').html(playerCount);
   },
 
   setDescription: function(description) {
-    this.$el.find('.network-game-description').get(0).innerHTML = description;
+    this.$el.find('.network-game-description').html(description);
   }
 });
 
@@ -198,12 +198,11 @@ $.extend(gameScreen, {
   },
 
   setDescription: function(description) {
-    this.$el.find('.network-game-description').get(0).innerHTML = description;
+    this.$el.find('.network-game-description').html(description);
   },
 
   onScreenShown: function() {
     this.setDescription('test');
-    this.setPlayerCount('555');
   }
 });
 

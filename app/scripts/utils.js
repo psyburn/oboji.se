@@ -4,7 +4,7 @@ var Utils = {
       ObojiSe.currentScreen = nextScreen;
       ObojiSe.currentScreen.onScreenShown();
     });
-    nextScreen.init();
+    // nextScreen.init();
     PageTransitions.goToScreen(nextScreen);
   }
 };
