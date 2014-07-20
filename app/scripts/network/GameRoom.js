@@ -39,7 +39,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     var oldGames = _.values(gameInfo.games || {});
 
     if (newGames.length > oldGames.length) {
-      var game = newInfo.games.slice(-1);
+      var game = newInfo.games.slice(-1)[0];
       trigger('game:next', game.startColor, game.goalColor);
     }
 
