@@ -8,7 +8,25 @@ var optionsScreen = new Screen({
   id: 'options-screen'
 });
 
-$.extend(gameMenuScreen, {
+_.extend(optionsScreen, {
+  fillUsername: function() {
+    var previousUsername = localStorage.getItem('username');
+    if (previousUsername) {
+      this.$el.find('input').get(0).value = previousUsername;
+    }
+  },
+
+  setListeners: function() {
+    this.$el.find('.save-options-button').on('click', _.bind(this.onSaveClick, this));
+  },
+
+  onSaveClick: function() {
+    localStorage.setItem('username', this.$el.find('input').get(0).value);
+  }
+});
+
+
+_.extend(gameMenuScreen, {
   setListeners: function() {
     this.$el.find('.network-game-button').on('click', this.onNetworkGameClick);
   },
@@ -17,8 +35,10 @@ $.extend(gameMenuScreen, {
     Utils.switchScreen(optionsScreen);
   }
 });
-gameMenuScreen.init();
 
+optionsScreen.init();
+optionsScreen.fillUsername();
+gameMenuScreen.init();
 
 
 var gameScreen = new Screen({
