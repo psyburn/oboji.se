@@ -41,8 +41,12 @@ _.extend(gameMenuScreen, {
       var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
 
       roomInfo.joinRoom(roomInfo.roomCode, function(room) {
-        Utils.switchScreen(gameScreen);
-        gameScreen.startGame();
+        if (room === false) {
+          window.alert('Mrš!');
+        } else {
+          Utils.switchScreen(gameScreen);
+          gameScreen.startGame();
+        }
       });
     });
   },
@@ -96,7 +100,6 @@ var networkGameLobbyScreen = new Screen({
 });
 
 _.extend(networkGameLobbyScreen, {
-
   setListeners: function() {
     var me = this;
     this.$el.find('.game-start-button').on('click', function() {
@@ -105,7 +108,7 @@ _.extend(networkGameLobbyScreen, {
   },
 
   onScreenShown: function() {
-    room.on('game:change', this.updateTexts, this);
+    room.on('game:changed', this.updateTexts, this);
     room.on('game:next', this.onRoomGameNext, this);
     this.updateTexts();
   },
@@ -138,7 +141,6 @@ _.extend(networkGameLobbyScreen, {
       this.$('.game-start-button').show();
       this.$('.game-will-start-soon').hide();
     }
-
   },
 
   setPlayerCount: function(playerCount) {
@@ -209,9 +211,15 @@ _.extend(joinNetworkGameMenu, {
   },
 
   onGameStartClick: function() {
+    var me = this;
     networkGame.joinRoom(this.getGameCodeValue(), function(inRoom) {
-      room = inRoom;
-      Utils.switchScreen(networkGameLobbyScreen);
+      if (inRoom === false) {
+        me.$('.game-code-input').val('');
+        window.alert('Mrš!');
+      } else {
+        room = inRoom;
+        Utils.switchScreen(networkGameLobbyScreen);
+      }
     });
   },
 
@@ -340,11 +348,11 @@ $.extend(gameScreen, {
   },
 
   onGameEnd: function() {
-
+    console.log('end');
   },
 
   onGameNext: function() {
-    // Show game screen
+    console.log('next');
   },
 
   onGameDone: function() {
@@ -354,17 +362,17 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
-    alert('fiinhs');
+    alert('Finish');
     // room.getLeaderboard();
   },
 
-  // onGameChange: function() {
-  //   if (this.room.isManager()) {
+  onGameChange: function() {
+    if (this.room.isManager()) {
 
-  //   } else {
+    } else {
 
-  //   }
-  // },
+    }
+  },
 
 
   shrinkTargetColor: function() {
@@ -413,6 +421,10 @@ var resultsScreen = new Screen({
 
 _.extend(resultsScreen, {
   setListeners: function() {},
+  init: function() {
+    this.setListeners();
+    console.log('init');
+  },
   setWinningMessage: function(playerWon) {
     var username = localStorage.getItem('username');
     if (playerWon) {
@@ -420,8 +432,32 @@ _.extend(resultsScreen, {
     } else {
       this.$el.find('.winning-message').text('Awwww, ' + username + ', you have lost :( :(');
     }
+  },
+  onScreenShown: function() {},
+  setData: function(data) {
+    var playersList = $('<ul>').addClass('scores');
+    var playerItem;
+    var playerName;
+    var playerScore;
 
-    this.$el.find('.next-game-message').text('Next game is starting in couple of seconds. Please rest your arm until then. ');
+    data = _.sortBy(data, function(player) {
+      return -parseInt(player.score, 10);
+    });
+
+    playerName = $('<span>').addClass('player-name');
+    playerScore = $('<span>').addClass('player-score');
+    playerItem = $('<li>').addClass('player');
+
+    _.each(data, function(player) {
+      var newName = playerName.clone().text(player.name);
+      var newScore = playerScore.clone().text(player.score);
+      var newPlayer = playerItem.clone();
+      newPlayer.append(newName);
+      newPlayer.append(newScore);
+      playersList.append(newPlayer);
+    });
+
+    $('.players-container').append(playersList);
   }
 });
 
