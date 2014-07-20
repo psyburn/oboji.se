@@ -366,8 +366,8 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
-    Util.switchScreen(resultsScreen);
-    alert('Finish');
+    Utils.switchScreen(resultsScreen);
+    // alert('Finish');
     // room.getLeaderboard();
   },
 
