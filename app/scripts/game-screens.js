@@ -95,15 +95,6 @@ _.extend(networkGameMenu, {
   }
 });
 
-networkGameMenu.init();
-
-
-optionsScreen.init();
-optionsScreen.fillUsername();
-gameMenuScreen.init();
-networkGameMenu.init();
-
-
 var gameScreen = new Screen({
   id: 'game-screen'
 });
@@ -136,13 +127,12 @@ $.extend(gameScreen, {
 });
 
 
-gameScreen.init();
+
 optionsScreen.init();
 gameMenuScreen.init();
-// networkGameLobbyScreen.init();
-// networkGameLobbyScreen.setDescription('test');
-// networkGameLobbyScreen.setPlayerCount('555');
-
+networkGameMenu.init();
+networkGameLobbyScreen.init();
+gameScreen.init();
 
 networkGameLobbyScreen.init();
 
