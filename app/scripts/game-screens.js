@@ -1,6 +1,7 @@
 /*global Screen, Core, Utils, _*/
 'use strict';
 
+/* Game menu screen */
 var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
@@ -32,19 +33,12 @@ gameMenuScreen.init();
 
 
 
-
-
+/* Options screen */
 var optionsScreen = new Screen({
   id: 'options-screen'
 });
 
-var gameScreen = new Screen({
-  id: 'game-screen'
-});
-
-var networkGameLobbyScreen = new Screen({
-  id: 'network-game-lobby'
-});
+optionsScreen.init();
 
 _.extend(optionsScreen, {
   fillUsername: function() {
@@ -67,6 +61,14 @@ _.extend(optionsScreen, {
   onScreenShown: function() {
     this.fillUsername();
   }
+});
+
+
+
+/* Network game lobby screen */
+
+var networkGameLobbyScreen = new Screen({
+  id: 'network-game-lobby'
 });
 
 _.extend(networkGameLobbyScreen, {
@@ -92,6 +94,10 @@ _.extend(networkGameLobbyScreen, {
   }
 });
 
+networkGameLobbyScreen.init();
+
+
+/* Network game screen */
 
 var networkGameMenu = new Screen({
   id: 'network-game-menu'
@@ -122,7 +128,19 @@ _.extend(networkGameMenu, {
   }
 });
 
+networkGameMenu.init();
+
+
+
+/* Game screen */
+
 var gameScreen = window.gameScreen = new Screen({
+  id: 'game-screen'
+});
+
+
+
+var gameScreen = new Screen({
   id: 'game-screen'
 });
 
@@ -212,8 +230,4 @@ $.extend(gameScreen, {
   }
 });
 
-optionsScreen.init();
-
-networkGameMenu.init();
-networkGameLobbyScreen.init();
 gameScreen.init();
