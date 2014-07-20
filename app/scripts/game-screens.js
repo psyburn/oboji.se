@@ -1,11 +1,12 @@
 /*global Screen, Core, Utils, _*/
 'use strict';
 
+var networkGame;
+
 /* Game menu screen */
 var gameMenuScreen = new Screen({
   id: 'game-menu'
 });
-
 
 
 _.extend(gameMenuScreen, {
@@ -20,8 +21,23 @@ _.extend(gameMenuScreen, {
   },
 
   onRandomNetworkGameClick: function() {
-    Utils.switchScreen(gameScreen);
-    gameScreen.startGame('peru', 'chocolate', 10);
+    networkGame = new NetworkGame({
+      name: localStorage.getItem('username')
+    });
+
+    networkGame.getPublicRooms(function(publicRooms) {
+      if (publicRooms.length === 0) {
+        Utils.switchScreen(gameMenuScreen);
+        return alert('Nema igra');
+      }
+      // Show loading screen
+      var roomInfo = publicRooms[Math.floor(Math.random() * publicRooms.length)];
+
+      roomInfo.joinRoom(roomInfo.roomCode, function(room) {
+        Utils.switchScreen(gameScreen);
+        gameScreen.setRoom(room);
+      });
+    });
   },
 
   onOptionsClick: function() {
@@ -134,12 +150,6 @@ var gameScreen = window.gameScreen = new Screen({
   id: 'game-screen'
 });
 
-
-
-var gameScreen = new Screen({
-  id: 'game-screen'
-});
-
 $.extend(gameScreen, {
 
   setListeners: function() {
@@ -185,10 +195,11 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
+    this.onGameEnd();
     // this.$currentColorOverlay
   },
 
-  startGame: function(startColor, targetColor, time) {
+  startGame: function(room, startColor, targetColor, time) {
     var me = this;
     me.setStartColor(startColor);
     me.setTargetColor(targetColor);
@@ -197,10 +208,54 @@ $.extend(gameScreen, {
         me.hideTopbar();
         me.shrinkTargetColor();
         me.$el.trigger('game-start-animation-finished');
+
         me.onGameStart();
       }, 2500);
     });
   },
+
+  setRoom: function(room) {
+    if (room) {
+      room.off('game:next', this.onGameNext, this);
+      room.off('game:done', this.onGameDone, this);
+      room.off('game:finish', this.onGameFinish, this);
+      room.off('game:changed', this.onGameChange, this);
+    }
+    this.room = room;
+    room.on('game:next', this.onGameNext, this);
+    room.on('game:done', this.onGameDone, this);
+    room.on('game:finish', this.onGameFinish, this);
+    room.on('game:changed', this.onGameChange, this);
+
+    if (room.isManager()) {
+      this.startGame();
+    }
+  },
+
+  onGameEnd: function() {
+
+  },
+
+  onGameNext: function() {
+    // Show game screen
+  },
+
+  onGameDone: function() {
+
+  },
+
+  onGameFinish: function() {
+
+  },
+
+  onGameChange: function() {
+    if (this.room.isManager()) {
+
+    } else {
+
+    }
+  },
+
 
   shrinkTargetColor: function() {
     $('.color1').addClass('shrink');
@@ -224,7 +279,12 @@ $.extend(gameScreen, {
     $('.color2').css({
       backgroundColor: targetColor
     });
+  },
+
+  generateRandomColor: function() {
+
   }
+
 });
 
 gameScreen.init();
