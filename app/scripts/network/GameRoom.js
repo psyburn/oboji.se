@@ -6,6 +6,10 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   var listeners = {};
   var scoreExpected = false;
 
+  function getRoomCode() {
+    return gameInfo.roomCode;
+  }
+
   function trigger(eventName) {
     listeners[eventName] = listeners[eventName] || [];
     var args = _.toArray(arguments).slice(1);
@@ -78,21 +82,23 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   }
 
   function getLeaderboard() {
-    var groups = _.groupBy(_.values(gameInfo.scores || []), player);
+    var groups = _.groupBy(_.values(gameInfo.scores || []), function(score) {
+      return score.player.id;
+    });
     var scores = [];
-    _.each(groups, function(group, groupPlayer) {
+    _.each(groups, function(group) {
       var score = 0;
       for (var i = 0; i < group.length; i++) {
         score += group[i].score;
       }
       scores.push({
-        player: groupPlayer,
+        player: group[0].player,
         score: score
       });
     });
 
     scores.sort(function(s1, s2) {
-      return s1.score > s2.score;
+      return s1.score < s2.score;
     });
 
     return scores;
@@ -147,6 +153,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     get: get,
     set: set,
     addScore: addScore,
-    startNextGame: manager ? startNextGame : undefined
+    startNextGame: manager ? startNextGame : undefined,
+    getRoomCode: getRoomCode
   };
 };

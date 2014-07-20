@@ -1,7 +1,24 @@
-/* global Firebase, NetworkGame, GameRoom */
+/* global _, Firebase, NetworkGame, GameRoom */
 
 NetworkGame = function(player) {
   'use strict';
+
+  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
+  function generateKey() {
+    var key = '';
+    for (var i = 0; i < 5; i++) {
+      var rand = Math.floor(Math.random() * keyChars.length);
+      key += keyChars[rand];
+    }
+    return key;
+  }
+
+  if (typeof player === 'string') {
+    player = {
+      name: player
+    };
+  }
+  player.id = generateKey() + '-' + (+new Date());
 
   var rootPath = 'https://oboji-se.firebaseio.com/';
 
@@ -13,8 +30,6 @@ NetworkGame = function(player) {
   offsetRef.on('value', function(snap) {
     timeOffset = snap.val();
   });
-
-  var keyChars = '123456789ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
 
   var activeRoom = null;
   var publicRooms = [];
@@ -34,6 +49,7 @@ NetworkGame = function(player) {
     options.players = { 0: player };
     options.scores = {};
     options.games = {};
+    options.expectedScores = 0;
     if (options.public) {
       publicRoomList.push({
         roomCode: options.roomCode,
@@ -70,14 +86,18 @@ NetworkGame = function(player) {
   }
 
   function joinRoom(roomCode, cb) {
-    if (activeRoom.roomCode === roomCode) {
+    if (activeRoom && activeRoom.roomCode === roomCode) {
       cb(activeRoom);
     } else {
       getRoomInfo(roomCode, function(room) {
+        if (!room) {
+          return cb(false);
+        }
         if (activeRoom) {
           activeRoom.leaveRoom();
         }
 
+        debugger
         var key = (+new Date()) + '-' + Math.random(); // A very stupid way to do this, but it should work without much logic
         room.players[key] = player;
         activeRoom = new GameRoom(new Firebase(rootPath + 'rooms/' + roomCode), room, player, false, this);
@@ -88,18 +108,9 @@ NetworkGame = function(player) {
 
   function getRoomInfo(roomCode, cb) {
     var room = new Firebase(rootPath + 'rooms/' + roomCode);
-    room.once('value', function(snapshot) {
+    room.once('value', _.bind(function(snapshot) {
       cb(snapshot.val());
-    });
-  }
-
-  function generateKey() {
-    var key = '';
-    for (var i = 0; i < 5; i++) {
-      var rand = Math.floor(Math.random() * keyChars.length);
-      key += keyChars[rand];
-    }
-    return key;
+    }, this));
   }
 
   return {
