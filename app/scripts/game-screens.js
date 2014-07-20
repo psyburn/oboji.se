@@ -179,7 +179,7 @@ $.extend(gameScreen, {
 
   init: function() {
     this.setListeners();
-    this.setTopbarText('Waiting for other unicorns...');
+    this.setTopbarText('This is your starting color. <br> Change it by shaing your phone up, down, left, right, forward, back');
     this.$timer = this.$('.timer');
   },
 
@@ -242,7 +242,7 @@ $.extend(gameScreen, {
   },
 
   setTopbarText: function(text) {
-    this.$el.find('.game-topbar').text(text);
+    this.$el.find('.game-topbar').html(text);
   },
 
   setStartColor: function(startColor) {
