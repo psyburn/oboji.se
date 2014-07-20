@@ -4,6 +4,10 @@
 
   window.Core = window.Core || {};
 
+  function rand255() {
+    return Math.floor(Math.random() * 255);
+  };
+
   Core.Color = function(r, g, b) {
     this.setRGB(r, g, b);
   };
@@ -18,5 +22,9 @@
       return val < 0 ? 0 : (val > 255 ? 255 : parseInt(val, 10));
     }
   });
+
+  Core.Color.generateRandomRgbString = function() {
+    return 'rgb(' + rand255() + ',' + rand255() + ',' + rand255() + ')';
+  };
 
 })();

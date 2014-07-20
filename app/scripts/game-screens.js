@@ -292,7 +292,24 @@ $.extend(gameScreen, {
   onGameTimerEnd: function() {
     this.$timer.text('Timeout!');
     this.clearGameTimer();
-    room.addScore(100);
+
+    var targetColor = this.$('.color2');
+    var startColor = this.$('.color1');
+
+    var targetRGB = targetColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+    var startRGB = startColor.css('background-color').split('(')[1].split(',').map(function(x) {
+      return parseInt(x);
+    });
+
+    var delta = function(old, newVal) {
+      return Math.abs(old - newVal);
+    };
+
+    var score = delta(targetRGB[0], startRGB[0]) + delta(targetRGB[1], startRGB[1]) + delta(targetRGB[2], startRGB[2]);
+
+    room.addScore(256 * 3 - score);
   },
 
   startGame: function() {
@@ -331,8 +348,8 @@ $.extend(gameScreen, {
     room.on('game:changed', this.onGameChange, this);
 
     if (room.isManager()) {
-      startColor = 'red';
-      targetColor = 'green';
+      startColor = Core.Color.generateRandomRgbString();
+      targetColor = Core.Color.generateRandomRgbString();
       room.startNextGame(startColor, targetColor);
     }
 
