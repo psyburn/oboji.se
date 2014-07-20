@@ -179,7 +179,7 @@ $.extend(gameScreen, {
 
   init: function() {
     this.setListeners();
-    this.setTopbarText('This is your starting color. <br> Change it by shaing your phone up, down, left, right, forward, back');
+    this.setTopbarText('Waiting for other unicorns...');
     this.$timer = this.$('.timer');
   },
 
@@ -242,7 +242,7 @@ $.extend(gameScreen, {
   },
 
   setTopbarText: function(text) {
-    this.$el.find('.game-topbar').html(text);
+    this.$el.find('.game-topbar').text(text);
   },
 
   setStartColor: function(startColor) {
@@ -267,10 +267,7 @@ var resultsScreen = new Screen({
 });
 
 _.extend(resultsScreen, {
-  setListeners: function() {
-    this.$el.find('.network-game-start-button').on('click', _.bind(this.onGameStarClick, this));
-    this.$el.find('input[type=radio]').on('change', _.bind(this.onGameTypeChage, this));
-  },
+  setListeners: function() {},
   setWinningMessage: function(playerWon) {
     var username = localStorage.getItem('username');
     if (playerWon) {
