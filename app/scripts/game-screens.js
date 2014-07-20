@@ -366,6 +366,7 @@ $.extend(gameScreen, {
   },
 
   onGameFinish: function() {
+    Util.switchScreen(resultsScreen);
     alert('Finish');
     // room.getLeaderboard();
   },
@@ -437,7 +438,11 @@ _.extend(resultsScreen, {
       this.$el.find('.winning-message').text('Awwww, ' + username + ', you didn\'t lost :( :( Try your luck in the next round');
     }
   },
-  onScreenShown: function() {},
+  onScreenShown: function() {
+    var board = room.getLeaderboard();
+    this.setWinningMessage(true);
+    this.setData(board);
+  },
   setData: function(data) {
     var playersList = $('<ul>').addClass('scores');
     var playerItem;
