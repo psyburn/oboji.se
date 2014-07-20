@@ -12,16 +12,5 @@ var GameScreens = {
 };
 
 $(function() {
-  PageTransitions.switchPage(GameScreens.gameScreen);
 
-  setTimeout(function() {
-    $('.color1').css({
-      backgroundColor: 'orangered'
-    });
-  }, 500);
-
-  setTimeout(function() {
-    $('.game-topbar').addClass('hide');
-    $('.color1').addClass('shrink');
-  }, 3000);
 });

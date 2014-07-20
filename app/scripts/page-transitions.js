@@ -128,9 +128,17 @@ var PageTransitions = (function() {
     init();
   });
 
+  function goToScreen(screen) {
+    switchPage({
+      showPage: screen.name,
+      animation: TransitionTypes.transitionIn
+    })
+  }
+
   return {
     init: init,
     switchPage: switchPage,
+    goToScreen: goToScreen,
     TransitionEvents: TransitionEvents,
     TransitionTypes: TransitionTypes
   };
