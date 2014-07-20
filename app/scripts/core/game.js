@@ -1,49 +1,54 @@
-/*globals $, _, Core */
-(function($, _) {
+/*globals $, Core */
+(function() {
   'use strict';
 
   window.Core = window.Core || {};
 
-  var $body = $('body');
+  Core.colorChanger = (function(color) {
+    color = color || new Core.Color(0, 0, 0);
+    var $el;
 
-  Core.Game = function() {
-    Core.motion.onAcceleration(_.bind(this.onMotionAcceleration, this));
-    Core.motion.onRotation(_.bind(this.onMotionRotation, this));
-    this._setRandomRGB();
-  };
+    // var getRandomColor = function() {
+    //   return new Core.Color(parseInt(Math.random() * 255, 10), parseInt(Math.random() * 255, 10), parseInt(Math.random() * 255, 10));
+    // };
 
-  _.extend(Core.Game.prototype, {
-    _setRandomRGB: function() {
-      this.r = parseInt(Math.random() * 255, 10);
-      this.g = parseInt(Math.random() * 255, 10);
-      this.b = parseInt(Math.random() * 255, 10);
-    },
+    var motionOffsetToColorOffset = function(val) {
+      return parseInt(val * 3, 10);
+    };
 
-    onMotionAcceleration: function(offsetX, offsetY, offsetZ) {
+    var setElement = function(el) {
+      $el = el;
+      Core.motion.enable(onMotionAcceleration, onMotionRotation);
+    };
+
+    var clearElement = function() {
+      $el = undefined;
+      Core.motion.disable();
+    };
+
+    var onMotionAcceleration = function(offsetX, offsetY, offsetZ) {
       console.log('on motion acceleration', offsetX, offsetY, offsetZ);
-      this.r = this.normalizeColorComponent(this.r + this.motionOffsetToColorOffset(offsetX));
-      this.g = this.normalizeColorComponent(this.g + this.motionOffsetToColorOffset(offsetY));
-      this.b = this.normalizeColorComponent(this.b + this.motionOffsetToColorOffset(offsetZ));
-      updateBodyColor(this.r, this.g, this.b);
-    },
+      color.setRGB(color.r + motionOffsetToColorOffset(offsetX), color.g + motionOffsetToColorOffset(offsetY), color.b + motionOffsetToColorOffset(offsetZ));
+      updateColor();
+    };
 
-    onMotionRotation: function(alpha, beta, gamma) {
+    var onMotionRotation = function(alpha, beta, gamma) {
       console.log('on motion rotation', alpha, beta, gamma);
-    },
+    };
 
-    motionOffsetToColorOffset: function(offset) {
-      return parseInt(offset * 5, 10);
-    },
+    var updateColor = function() {
+      console.log(color.r, color.g, color.b);
+      if ($el) {
+        $el.css('background-color', 'rgba(' + color.r + ',' + color.g + ',' + color.b + ',1)');
+      }
+    };
 
-    normalizeColorComponent: function(val) {
-      return val < 0 ? 0 : (val > 255 ? 255 : parseInt(val, 10));
-    }
-  });
+    return {
+      setElement: setElement,
+      clearElement: clearElement,
+      updateColor: updateColor
+    };
+  })();
 
-  function updateBodyColor(r, g, b) {
-    console.log(r, g, b);
-    $body.css('background-color', 'rgba(' + r + ',' + g + ',' + b + ',1)');
-  }
-
-  window.game = new Core.Game();
-})($, _);
+  Core.colorChanger.setElement($('body'));
+})();

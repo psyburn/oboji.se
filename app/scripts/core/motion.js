@@ -110,6 +110,16 @@ Core.motion = (function() {
     rotationClb = clb;
   }
 
+  function enable(onAcceleration, onRotation) {
+    registerForAcceleration(onAcceleration);
+    registerForRotation(onRotation);
+    $(window).on('devicemotion', update);
+  }
+
+  function disable() {
+    $(window).off('devicemotion');
+  }
+
   var accelerationClb = function(x, y, z) {
     console.log('offset', x, y, z);
   };
@@ -118,11 +128,11 @@ Core.motion = (function() {
     console.log('rotation', a, b, g);
   };
 
-  $(window).on('devicemotion', update);
-
   return {
     onRotation: registerForRotation,
     onAcceleration: registerForAcceleration,
+    enable: enable,
+    disable: disable,
     ad: ad
   };
 })();
