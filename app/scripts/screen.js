@@ -1,11 +1,8 @@
 'use strict';
 
-var ObojiSe = {
-  currentScreen: null
-};
-
 var Screen = function(options) {
   this._init(options);
+  this.setListeners();
 };
 
 $.extend(Screen.prototype, {
@@ -14,19 +11,18 @@ $.extend(Screen.prototype, {
   },
   init: function(options) {
     // game logic
+  },
+  setListeners: function(options) {
+    // listeners
   }
 });
 
-var Utils = {
-  switchScreen: function(currentScreen, nextScreen) {
-    nextScreen.on('transitionEnd', function() {
-      ObojiSe.currentScreen = nextScreen;
-      ObojiSe.currentScreen.init();
-    });
-  }
-};
-
 
 var gameMenu = new Screen({
-  id: 'game-menu'
+  id: 'game-menu',
+  setListeners: function() {
+    this.$el.on('click', function(){
+      // smth
+    })
+  }
 });
