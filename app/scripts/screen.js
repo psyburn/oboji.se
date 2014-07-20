@@ -2,7 +2,7 @@
 
 var Screen = function(options) {
   this._init(options);
-  this._setListeners();
+  this.setListeners();
 };
 
 $.extend(Screen.prototype, {
