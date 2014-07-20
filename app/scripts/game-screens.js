@@ -172,14 +172,7 @@ var gameScreen = window.gameScreen = new Screen({
   id: 'game-screen'
 });
 
-
-
-var gameScreen = new Screen({
-  id: 'game-screen'
-});
-
 $.extend(gameScreen, {
-
   setListeners: function() {
     this.$('.network-game-button').on('click', this.onNetworkGameClick);
   },
@@ -187,6 +180,7 @@ $.extend(gameScreen, {
   init: function() {
     this.setListeners();
     this.setTopbarText('Waiting for other unicorns...');
+    this.$timer = this.$('.timer');
   },
 
   onNetworkGameClick: function() {
@@ -194,7 +188,7 @@ $.extend(gameScreen, {
   },
 
   onGameStart: function() {
-    Core.colorChanger.setElement(this.$('.color1'));
+    Core.colorChanger.setElement(this.$('.color2'));
     this.startGameTimer();
   },
 
@@ -207,7 +201,7 @@ $.extend(gameScreen, {
       if (me.gameTime === 0) {
         me.onGameTimerEnd.call(me);
       } else {
-        me.$('.timer').text(me.gameTime / 1000 + ' seconds left ...');
+        me.$timer.text(me.gameTime / 1000 + ' seconds left ...');
       }
     }, 1000);
   },
@@ -216,11 +210,11 @@ $.extend(gameScreen, {
     if (this.gameInterval) {
       window.clearInterval(this.gameInterval);
     }
-    this.$('.timer').text();
+    this.$timer.text();
   },
 
   onGameTimerEnd: function() {
-    this.$('.timer').text('Timeout!');
+    this.$timer.text('Timeout!');
     this.clearGameTimer();
     // this.$currentColorOverlay
   },
