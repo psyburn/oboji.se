@@ -6,6 +6,10 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
   var listeners = {};
   var scoreExpected = false;
 
+  function getRoomCode() {
+    return gameInfo.roomCode;
+  }
+
   function trigger(eventName) {
     listeners[eventName] = listeners[eventName] || [];
     var args = _.toArray(arguments).slice(1);
@@ -94,7 +98,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     });
 
     scores.sort(function(s1, s2) {
-      return s1.score > s2.score;
+      return s1.score < s2.score;
     });
 
     return scores;
@@ -149,6 +153,7 @@ GameRoom = function(remoteRoom, gameInfo, player, manager, netGame) {
     get: get,
     set: set,
     addScore: addScore,
-    startNextGame: manager ? startNextGame : undefined
+    startNextGame: manager ? startNextGame : undefined,
+    getRoomCode: getRoomCode
   };
 };
